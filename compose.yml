@@ -1,0 +1,39 @@
+﻿services:
+  apta.infrastructure.mongo:
+    container_name: "apta.infrastructure.mongo"
+    image: mongo:8.0
+    env_file:
+      - .env
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    volumes:
+      - apta.infrastructure.mongo:/data/db
+
+  apta.infrastructure.keycloak:
+    container_name: "apta.infrastructure.keycloak"
+    image: quay.io/keycloak/keycloak:26.6.2
+    command: start-dev
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+
+  apta.infrastructure.seq:
+    container_name: "apta.infrastructure.seq"
+    image: datalust/seq:latest
+    ports:
+      - "5341:80"
+      - "5342:5341"
+    environment:
+      ACCEPT_EULA: "Y"
+      SEQ_FIRSTRUN_ADMINPASSWORD: ${SEQ_PASSWORD}
+    volumes:
+      - apta.infrastructure.seq:/data
+
+volumes:
+  apta.infrastructure.mongo:
+  apta.infrastructure.seq:

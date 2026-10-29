@@ -1,0 +1,38 @@
+
+# ─────────────────────────────────────────────────────────────────────────────
+# <type>(#<task>): this commit <verb> <contextual description>
+#
+#   e.g.  feature(#42): this commit introduces table session checkout
+#         fix(#17): this commit prevents duplicate items in an order
+#         feature(#30)!: this commit changes the order contract        (breaking)
+#         refactor(#8): this commit simplifies the order total handling
+#         chore(#00): this commit introduces base repository config files
+#
+# Then, after a blank line, an optional body: what changed and WHY
+# (not how). Wrap at ~72 columns.
+#
+# ── style ────────────────────────────────────────────────────────────────────
+#   - the summary always starts with "this commit <verb> ..."
+#       (introduces / refactors / removes / updates / fixes / prevents …)
+#   - stay CONTEXTUAL: describe the effect / intent, not the implementation
+#   - never name classes, methods, variables or file names in the summary
+#   - all lowercase, english, no trailing period
+#
+# ── types ────────────────────────────────────────────────────────────────────
+#   feature   new functionality                 -> bumps MINOR   (0.X.0)
+#   fix       bug fix                            -> bumps PATCH   (0.0.X)
+#   feature!  breaking change — put "!" before   -> bumps MAJOR   (X.0.0)
+#             the colon:  feature(#42)!: ...
+#
+#   chore     tooling / config / meta           -> no version bump
+#   docs      documentation only                -> no version bump
+#   refactor  code change, no behavior change    -> no version bump
+#   test      tests only                         -> no version bump
+#   style     formatting only (no code change)   -> no version bump
+#   perf      performance improvement            -> no version bump
+#   ci        pipelines / workflows              -> no version bump
+#
+# ── rules ────────────────────────────────────────────────────────────────────
+#   - <task> is numeric (e.g. #42); use #00 when there is no task
+#   - only feature / fix / feature! change the version (see GitVersion.yml)
+# ─────────────────────────────────────────────────────────────────────────────

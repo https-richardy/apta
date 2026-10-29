@@ -1,0 +1,24 @@
+#   feature(#NUM)!: <message>   ->  major   (X.0.0)
+#   feature(#NUM): <message>    ->  minor   (0.X.0)
+#   fix(#NUM): <message>        ->  patch   (0.0.X)
+
+workflow: GitHubFlow/v1
+mode: ContinuousDeployment
+
+strategies:
+  - Fallback
+  - ConfiguredNextVersion
+  - Mainline
+
+# enables version incrementing based on commit messages.
+commit-message-incrementing: Enabled
+
+major-version-bump-message: '^feature\(#\d+\)!:'
+minor-version-bump-message: '^feature\(#\d+\):'
+patch-version-bump-message: '^fix\(#\d+\):'
+
+branches:
+  main:
+    increment: None
+    label: ''
+    is-main-branch: true

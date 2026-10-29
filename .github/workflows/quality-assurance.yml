@@ -1,0 +1,78 @@
+name: pull request quality assurance
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: qa-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-test:
+    name: build & test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5
+
+      - name: setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: backend/global.json
+
+      - name: restore
+        run: dotnet restore
+
+      - name: build
+        run: dotnet build --no-restore --configuration Debug
+
+      - name: test
+        run: >
+          dotnet test --no-build --configuration Debug
+          --coverage
+          --coverage-output-format cobertura
+          --coverage-output coverage.cobertura.xml
+
+      - name: coverage summary
+        if: ${{ !cancelled() }}
+        run: |
+          dotnet tool restore
+          dotnet tool run reportgenerator \
+            -reports:**/*.cobertura.xml \
+            -targetdir:coverage-report \
+            -reporttypes:MarkdownSummaryGithub
+          cat coverage-report/SummaryGithub.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: upload coverage
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: |
+            backend/**/TestResults/coverage.cobertura.xml
+            backend/coverage-report/**
+          if-no-files-found: error

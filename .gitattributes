@@ -1,0 +1,104 @@
+* text=auto eol=lf
+
+*.ts            text eol=lf diff=javascript
+*.tsx           text eol=lf diff=javascript
+*.mts           text eol=lf diff=javascript
+*.cts           text eol=lf diff=javascript
+*.js            text eol=lf diff=javascript
+*.jsx           text eol=lf diff=javascript
+*.mjs           text eol=lf diff=javascript
+*.cjs           text eol=lf diff=javascript
+
+*.css           text eol=lf diff=css
+*.scss          text eol=lf diff=css
+*.sass          text eol=lf
+*.less          text eol=lf
+*.html          text eol=lf diff=html
+*.htm           text eol=lf diff=html
+*.svg           text eol=lf
+*.xml           text eol=lf
+
+*.json          text eol=lf
+*.jsonc         text eol=lf
+*.json5         text eol=lf
+*.yml           text eol=lf
+*.yaml          text eol=lf
+*.toml          text eol=lf
+*.ini           text eol=lf
+*.env           text eol=lf
+.env*           text eol=lf
+.editorconfig   text eol=lf
+.gitattributes  text eol=lf
+.gitignore      text eol=lf
+.npmrc          text eol=lf
+.nvmrc          text eol=lf
+*.config        text eol=lf
+
+*.md            text eol=lf diff=markdown
+*.mdx           text eol=lf diff=markdown
+*.txt           text eol=lf
+
+LICENSE         text eol=lf
+
+*.sh            text eol=lf
+*.bash          text eol=lf
+*.bat           text eol=crlf
+*.cmd           text eol=crlf
+*.ps1           text eol=crlf
+*.psm1          text eol=crlf
+*.psd1          text eol=crlf
+
+package-lock.json   text eol=lf -diff merge=binary linguist-generated=true
+npm-shrinkwrap.json text eol=lf -diff merge=binary linguist-generated=true
+
+dist/**         linguist-generated=true
+build/**        linguist-generated=true
+coverage/**     linguist-generated=true
+
+*.map           linguist-generated=true -diff
+*.min.js        linguist-generated=true -diff
+*.min.css       linguist-generated=true -diff
+
+*.png           binary
+*.jpg           binary
+*.jpeg          binary
+*.gif           binary
+*.webp          binary
+*.avif          binary
+*.bmp           binary
+*.ico           binary
+*.tif           binary
+*.tiff          binary
+*.psd           binary
+
+*.woff          binary
+*.woff2         binary
+*.ttf           binary
+*.otf           binary
+*.eot           binary
+
+*.mp3           binary
+*.wav           binary
+*.ogg           binary
+*.mp4           binary
+*.webm          binary
+*.mov           binary
+
+*.pdf           binary
+*.doc           binary
+*.docx          binary
+*.xls           binary
+*.xlsx          binary
+*.ppt           binary
+*.pptx          binary
+
+*.zip           binary
+*.gz            binary
+*.tgz           binary
+*.tar           binary
+*.7z            binary
+*.rar           binary
+*.exe           binary
+*.dll           binary
+*.wasm          binary
+*.node          binary
