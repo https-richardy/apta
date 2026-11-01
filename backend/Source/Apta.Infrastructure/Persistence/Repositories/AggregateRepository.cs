@@ -44,18 +44,18 @@ public abstract class AggregateRepository<TAggregate>(DbContext database, ILogge
                     aggregate.MarkAsUpdated();
 
                     database.Set<TAggregate>().Update(aggregate);
-                    return true;
+                    return await Task.FromResult(true);
                 }
 
             /* permanently removes the record from the database (physical delete) */
             case DeletionBehavior.Hard:
                 {
                     database.Set<TAggregate>().Remove(aggregate);
-                    return true;
+                    return await Task.FromResult(true);
                 }
         }
 
-        return false;
+        return await Task.FromResult(false);
     }
 
     public virtual async Task<TAggregate> UpdateAsync(TAggregate aggregate, CancellationToken cancellation = default)
