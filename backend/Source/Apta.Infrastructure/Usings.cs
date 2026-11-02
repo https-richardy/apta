@@ -5,6 +5,11 @@ global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 global using Apta.Domain.Aggregates;
+global using Apta.Domain.Repositories;
+global using Apta.Domain.Filtering;
+
+global using Apta.Infrastructure.Persistence.Extensions;
+global using Apta.Infrastructure.Persistence.Repositories.Pipelines;
 
 global using HttpsRichardy.Internal.Essentials.Filtering;
 global using HttpsRichardy.Internal.Essentials.Aggregates;
