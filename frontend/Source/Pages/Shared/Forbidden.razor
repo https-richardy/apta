@@ -1,0 +1,22 @@
+@inject NavigationManager Navigation
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalAlignment="VerticalAlignment.Center" VerticalGap="16" Style="height: 100%; text-align: center;">
+    <FluentIcon Value="@(new Size48.LockClosed())" Color="Color.Primary" Width="84px" />
+
+    <div style="font-size: 4.5rem; font-weight: 700; line-height: 1;">403</div>
+    <div style="font-size: 1.15rem; font-weight: 600;">Você não tem permissão para acessar esta página.</div>
+    <div style="opacity: 0.7; max-width: 420px;">
+        Se você acredita que isso é um engano, entre em contato com o administrador do seu escritório.
+    </div>
+
+    <FluentButton Appearance="ButtonAppearance.Primary" @onclick="GoHome">
+        Voltar ao início
+    </FluentButton>
+</FluentStack>
+
+@code {
+    private void GoHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
