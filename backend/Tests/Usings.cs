@@ -3,6 +3,7 @@ global using Microsoft.Extensions.Logging.Abstractions;
 
 global using Apta.Application.Handlers.Administrators;
 global using Apta.Application.Mapping;
+global using Apta.Application.Transport;
 global using Apta.Application.Transport.Administrators;
 global using Apta.Application.Validators.Administrators;
 

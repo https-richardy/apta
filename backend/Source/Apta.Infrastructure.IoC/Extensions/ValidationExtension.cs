@@ -6,5 +6,6 @@ internal static class ValidationExtension
     public static void AddValidation(this IServiceCollection services)
     {
         services.AddScoped<IValidator<AdministratorCreationScheme>, AdministratorCreationSchemeValidator>();
+        services.AddScoped<IValidator<AdministratorFiltersParameters>, AdministratorFiltersParametersValidator>();
     }
 }

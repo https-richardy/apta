@@ -5,6 +5,19 @@ namespace Apta.WebApi.Controllers;
 [ApiConventionType(typeof(AdministratorsMetadata))]
 public sealed class AdministratorsController(IDispatcher dispatcher) : ControllerBase
 {
+    [HttpGet]
+    [Authorize]
+    [EndpointDescription("searches for administrators based on the provided filters")]
+    public async Task<IActionResult> FilterAdministratorsAsync([FromQuery] AdministratorFiltersParameters request, CancellationToken cancellation)
+    {
+        var result = await dispatcher.DispatchAsync(request, cancellation);
+
+        return result switch
+        {
+            { IsSuccess: true } => StatusCode(StatusCodes.Status200OK, result.Data),
+        };
+    }
+
     [HttpPost]
     [Authorize]
     [EndpointDescription("creates an administrator from the provided data")]

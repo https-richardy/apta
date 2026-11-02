@@ -12,6 +12,7 @@ global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
 
 global using Apta.Domain.Errors;
+global using Apta.Application.Transport;
 global using Apta.Application.Transport.Administrators;
 
 global using Apta.WebApi.Authentication;
