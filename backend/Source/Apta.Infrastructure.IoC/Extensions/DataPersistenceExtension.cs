@@ -16,7 +16,7 @@ internal static class DataPersistenceExtension
                     maxRetryDelay: TimeSpan.FromSeconds(settings.Database.MaxRetryDelay),
 
                     /* https://www.postgresql.org/docs/current/errcodes-appendix.html */
-                    errorCodesToAdd: 
+                    errorCodesToAdd:
                     [
                         "40001", /* serialization failure */
                         "40P01", /* deadlock detected */
@@ -25,5 +25,8 @@ internal static class DataPersistenceExtension
                     ]);
             });
         });
+
+        services.AddScoped<IAdministratorRepository, AdministratorRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
     }
 }
