@@ -6,6 +6,7 @@ namespace Apta.WebApi.Controllers;
 public sealed class AdministratorsController(IDispatcher dispatcher) : ControllerBase
 {
     [HttpPost]
+    [Authorize]
     [EndpointDescription("creates an administrator from the provided data")]
     public async Task<IActionResult> CreateAdministratorAsync([FromBody] AdministratorCreationScheme request, CancellationToken cancellation)
     {

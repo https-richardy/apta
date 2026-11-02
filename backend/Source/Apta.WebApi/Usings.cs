@@ -9,6 +9,7 @@ global using Microsoft.AspNetCore.OpenApi;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ApiExplorer;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.AspNetCore.Authorization;
 
 global using Apta.Domain.Errors;
 global using Apta.Application.Transport.Administrators;
