@@ -1,4 +1,5 @@
 ﻿global using System.Linq.Expressions;
+global using System.Diagnostics.CodeAnalysis;
 
 global using Microsoft.Extensions.Logging;
 global using Microsoft.EntityFrameworkCore;

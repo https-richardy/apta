@@ -1,5 +1,6 @@
 ﻿namespace Apta.Infrastructure.Persistence.Extensions;
 
+[ExcludeFromCodeCoverage(Justification = "only builds linq expression trees that are translated to sql by the database provider, so it does not contain any logic that can be unit tested; its behavior is covered by the persistence integration tests.")]
 public static class QueryableExtension
 {
     public static IQueryable<TAggregate> FilterWhenNotNull<TAggregate>(this IQueryable<TAggregate> query, bool condition, Expression<Func<TAggregate, bool>> predicate)
