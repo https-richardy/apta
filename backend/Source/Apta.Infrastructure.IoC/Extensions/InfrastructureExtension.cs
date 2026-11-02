@@ -8,5 +8,7 @@ public static class InfrastructureExtension
         var settings = services.BindSettings(configuration);
 
         services.AddDataPersistence(settings);
+        services.AddValidation();
+        services.AddMapping();
     }
 }
