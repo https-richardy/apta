@@ -14,8 +14,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.18.1" />
         <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.12.0" />
+        <PackageReference Include="Testcontainers.PostgreSql" Version="4.16.0" />
         <PackageReference Include="xunit.v3" Version="4.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Source\Apta.Infrastructure\Apta.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
