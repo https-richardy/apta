@@ -6,3 +6,5 @@ global using Microsoft.EntityFrameworkCore;
 
 global using Apta.Infrastructure.IoC.Configurations;
 global using Apta.Infrastructure.Persistence;
+
+global using HttpsRichardy.Internal.Essentials.Contracts;

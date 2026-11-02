@@ -5,6 +5,7 @@ internal static class DataPersistenceExtension
 {
     public static void AddDataPersistence(this IServiceCollection services, ISettings settings)
     {
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddDbContext<DatabaseContext>(options =>
         {
             options.UseNpgsql(settings.Database.ConnectionString, pgsqlOptions =>
