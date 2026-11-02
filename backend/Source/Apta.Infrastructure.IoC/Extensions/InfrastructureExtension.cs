@@ -9,6 +9,7 @@ public static class InfrastructureExtension
 
         services.AddDataPersistence(settings);
         services.AddValidation();
+        services.AddMediator();
         services.AddMapping();
     }
 }
