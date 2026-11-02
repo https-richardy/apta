@@ -1,16 +1,17 @@
 ﻿services:
-  apta.infrastructure.mongo:
-    container_name: "apta.infrastructure.mongo"
-    image: mongo:8.0
+  apta.infrastructure.postgres:
+    container_name: "apta.infrastructure.postgres"
+    image: postgres:17
     env_file:
       - .env
     ports:
-      - "27017:27017"
+      - "5432:5432"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      - apta.infrastructure.mongo:/data/db
+      - apta.infrastructure.postgres:/var/lib/postgresql/data
 
   apta.infrastructure.keycloak:
     container_name: "apta.infrastructure.keycloak"
@@ -35,5 +36,5 @@
       - apta.infrastructure.seq:/data
 
 volumes:
-  apta.infrastructure.mongo:
+  apta.infrastructure.postgres:
   apta.infrastructure.seq:
