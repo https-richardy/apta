@@ -24,7 +24,9 @@ global using Apta.Infrastructure.IoC.Extensions;
 global using Markdig;
 global using Markdig.Syntax;
 
+global using FluentValidation.AspNetCore;
 global using Flurl;
+
 global using Scalar.AspNetCore;
 global using Dispattchr.Contracts;
 global using HttpsRichardy.Internal.Essentials.Patterns;

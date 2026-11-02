@@ -7,6 +7,7 @@ public static class WebInfrastructureExtension
     {
         services.AddOpenApi();
         services.AddControllers();
+
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer();
         services.AddBearerAuthentication();
@@ -14,5 +15,9 @@ public static class WebInfrastructureExtension
 
         services.AddTransformers();
         services.AddAuthorization();
+        services.AddFluentValidationAutoValidation(options =>
+        {
+            options.DisableDataAnnotationsValidation = true;
+        });
     }
 }
