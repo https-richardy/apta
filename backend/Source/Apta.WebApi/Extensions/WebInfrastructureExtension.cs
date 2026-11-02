@@ -9,6 +9,8 @@ public static class WebInfrastructureExtension
         services.AddControllers();
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer();
+        services.AddBearerAuthentication();
+        services.AddAuthorization();
 
         services.AddTransformers();
         services.AddAuthorization();
