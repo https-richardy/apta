@@ -7,6 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Dispattchr" Version="1.0.5" />
+      <PackageReference Include="FluentValidation" Version="12.2.0" />
+      <PackageReference Include="HttpsRichardy.Mapping" Version="0.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\Apta.Domain\Apta.Domain.csproj" />
     </ItemGroup>
 
