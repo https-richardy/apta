@@ -1,6 +1,9 @@
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Logging.Abstractions;
 
+global using Apta.Application.Transport.Administrators;
+global using Apta.Application.Validators.Administrators;
+
 global using Apta.Domain.Aggregates;
 global using Apta.Domain.Filtering;
 
