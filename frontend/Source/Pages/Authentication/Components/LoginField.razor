@@ -1,0 +1,24 @@
+<div style="display: flex; flex-direction: column; gap: 6px; width: 100%;">
+    <label style="font-size: 0.85rem; font-weight: 600;">@Label</label>
+    <FluentTextInput Value="@Value" ValueChanged="@ValueChanged" TextInputType="@Type" Placeholder="@Placeholder" IconStart="@Icon" Style="width: 100%;" />
+</div>
+
+@code {
+    [Parameter]
+    public string Label { get; set; } = string.Empty;
+
+    [Parameter]
+    public string? Value { get; set; }
+
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    [Parameter]
+    public TextInputType Type { get; set; } = TextInputType.Text;
+
+    [Parameter]
+    public Icon? Icon { get; set; }
+}

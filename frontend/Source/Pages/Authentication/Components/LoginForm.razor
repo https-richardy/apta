@@ -1,0 +1,32 @@
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="width: 100%;">
+    <LoginField Label="Email" Value="@Email" ValueChanged="@EmailChanged" Type="TextInputType.Email" Placeholder="seu@email.com" Icon="@EmailIcon" />
+    <LoginField Label="Senha" Value="@Password" ValueChanged="@PasswordChanged" Type="TextInputType.Password" Placeholder="••••••••" Icon="@PasswordIcon" />
+
+    <FluentButton Appearance="ButtonAppearance.Primary" @onclick="OnSubmit" Style="width: 100%;">
+        Entrar
+    </FluentButton>
+
+    <div style="font-size: 0.8rem; opacity: 0.6; text-align: center; line-height: 1.5;">
+        Ao clicar em continuar, você concorda com nossos <strong style="text-decoration: underline;">Termos de Serviço</strong> e <strong style="text-decoration: underline;">Política de Privacidade</strong>.
+    </div>
+</FluentStack>
+
+@code {
+    private static readonly Icon EmailIcon = new Size20.Mail();
+    private static readonly Icon PasswordIcon = new Size20.LockClosed();
+
+    [Parameter]
+    public string? Email { get; set; }
+
+    [Parameter]
+    public string? Password { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> EmailChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<string?> PasswordChanged { get; set; }
+
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+}

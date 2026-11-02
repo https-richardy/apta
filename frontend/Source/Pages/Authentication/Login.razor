@@ -1,0 +1,19 @@
+@page "/login"
+@layout AuthenticationLayout
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalAlignment="VerticalAlignment.Center" VerticalGap="24" Style="height: 100vh; width: 100%;">
+    <LoginHeader />
+    <div style="width: 360px; max-width: 90%;">
+        <LoginForm @bind-Email="_email" @bind-Password="_password" OnSubmit="HandleSubmit" />
+    </div>
+</FluentStack>
+
+@code {
+    private string? _email;
+    private string? _password;
+
+    private void HandleSubmit()
+    {
+
+    }
+}
