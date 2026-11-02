@@ -1,6 +1,7 @@
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Logging.Abstractions;
 
+global using Apta.Application.Mapping;
 global using Apta.Application.Transport.Administrators;
 global using Apta.Application.Validators.Administrators;
 
@@ -17,4 +18,5 @@ global using HttpsRichardy.Internal.Essentials.Contracts.Behaviors;
 global using HttpsRichardy.Internal.Essentials.Filtering;
 
 global using AutoFixture;
+global using HttpsRichardy.Mapping;
 global using Testcontainers.PostgreSql;
