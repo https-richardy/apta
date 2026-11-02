@@ -1,0 +1,17 @@
+**/.vs
+**/.git
+
+**/bin
+**/obj
+**/.vscode
+**/TestResults
+
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.gitattributes
+
+Dockerfile
+README.md
+LICENSE

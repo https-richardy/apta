@@ -1,0 +1,13 @@
+@inherits LayoutComponentBase
+
+<FluentLayout>
+    <FluentLayoutItem Area="LayoutArea.Header">APTA</FluentLayoutItem>
+    <FluentLayoutItem Area="LayoutArea.Navigation">
+        <NavMenu />
+    </FluentLayoutItem>
+
+    <FluentLayoutItem Area="LayoutArea.Content">
+        @Body
+    </FluentLayoutItem>
+</FluentLayout>
+<FluentProviders />
