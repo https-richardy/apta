@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Flurl" Version="4.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.13" />
         <PackageReference Include="Scalar.AspNetCore" Version="2.18.7" />
         <PackageReference Include="Scalar.AspNetCore.Microsoft" Version="2.18.7" />
