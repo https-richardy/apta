@@ -15,7 +15,9 @@ public partial class Program
         var app = builder.Build();
 
         app.MapOpenApi();
+
         app.UseMiddlewares();
+        app.UseReference();
 
         await app.RunAsync();
     }
