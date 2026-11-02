@@ -5,17 +5,17 @@ public partial class Program
     private static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        var configuration = builder.Configuration;
 
-        builder.Services.AddControllers();
-        builder.Services.AddOpenApi();
+        builder.Services.AddInfrastructure(configuration);
+        builder.Services.AddWebInfrastructure();
+
+        builder.Configuration.AddEnvironmentVariables();
 
         var app = builder.Build();
 
-        app.UseHttpsRedirection();
-        app.UseAuthorization();
-
         app.MapOpenApi();
-        app.MapControllers();
+        app.UseMiddlewares();
 
         await app.RunAsync();
     }
