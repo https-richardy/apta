@@ -16,6 +16,8 @@ global using Apta.Infrastructure.IoC.Configurations;
 global using Apta.Infrastructure.IoC.Extensions;
 
 global using Flurl;
+global using Markdig;
+global using Markdig.Syntax;
 global using Scalar.AspNetCore;
 global using Dispattchr.Contracts;
 global using HttpsRichardy.Internal.Essentials.Patterns;

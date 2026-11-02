@@ -10,6 +10,7 @@ public static class TransformersExtension
             options.AddScalarTransformers();
             options.AddDocumentTransformer<SecurityTransformer>();
             options.AddDocumentTransformer<DescriptionTransformer>();
+            options.AddDocumentTransformer<TagsTransformer>();
         });
     }
 }
