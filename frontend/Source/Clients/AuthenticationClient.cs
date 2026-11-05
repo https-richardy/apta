@@ -25,7 +25,7 @@ public sealed class AuthenticationClient(HttpClient httpClient, ISettings settin
 
         ]);
 
-        var response = await _httpClient.PostAsync("/protocol/openid-connect/token", content, cancellation);
+        var response = await _httpClient.PostAsync("protocol/openid-connect/token", content, cancellation);
         var contentString = await response.Content.ReadAsStringAsync(cancellation);
 
         if (!response.IsSuccessStatusCode)
