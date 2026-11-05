@@ -3,10 +3,10 @@
 
 @inject IAuthenticationClient AuthenticationClient
 @inject JwtBearerAuthenticationStateProvider AuthenticationState
+@inject INotificationService NotificationService
 @inject NavigationManager Navigation
 
-<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center"
-             VerticalAlignment="VerticalAlignment.Center" VerticalGap="24" Style="height: 100vh; width: 100%;">
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalAlignment="VerticalAlignment.Center" VerticalGap="24" Style="height: 100vh; width: 100%;">
     <LoginHeader />
     <div style="width: 360px; max-width: 90%;">
         <LoginForm @bind-Email="_credentials.Email" @bind-Password="_credentials.Password" OnSubmit="HandleSubmit" />
@@ -19,11 +19,11 @@
     private async Task HandleSubmit()
     {
         var result = await AuthenticationClient.AuthenticateAsync(_credentials);
-        if (!result.IsSuccess || result.Data is null)
+        if (result.IsFailure || result.Data is null)
         {
+            await NotificationService.ShowErrorToastAsync("Falha na autenticação", "Verifique se o seu email e a sua senha estão corretos e tente novamente.");
             return;
         }
-
 
         await AuthenticationState.AuthenticateAsync(result.Data.AccessToken);
 
