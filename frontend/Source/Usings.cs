@@ -15,6 +15,7 @@ global using Microsoft.FluentUI.AspNetCore.Components;
 
 global using Apta.WebUI.Authentication;
 global using Apta.WebUI.Clients;
+global using Apta.WebUI.Clients.Interfaces;
 global using Apta.WebUI.Configuration;
 global using Apta.WebUI.Extensions;
 global using Apta.WebUI.Transport.Authentication;

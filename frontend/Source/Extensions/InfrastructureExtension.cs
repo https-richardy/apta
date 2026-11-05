@@ -5,9 +5,11 @@ public static class InfrastructureExtension
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.BindSettings(configuration);
+        var settings = services.BindSettings(configuration);
+
         services.AddBlazoredLocalStorage();
         services.AddFluentUIComponents();
         services.AddBearerAuthentication();
+        services.AddClients(settings);
     }
 }
