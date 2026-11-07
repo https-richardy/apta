@@ -4,6 +4,7 @@ global using System.Text.Json;
 
 global using System.Diagnostics.CodeAnalysis;
 global using System.IdentityModel.Tokens.Jwt;
+global using System.Net;
 global using System.Net.Http.Headers;
 global using System.Security.Claims;
 
@@ -18,6 +19,7 @@ global using Apta.WebUI.Clients.Interfaces;
 global using Apta.WebUI.Configuration;
 global using Apta.WebUI.Extensions;
 global using Apta.WebUI.Transport.Authentication;
+global using Apta.WebUI.Interceptors;
 global using Apta.WebUI.Validators;
 
 global using Blazored.LocalStorage;

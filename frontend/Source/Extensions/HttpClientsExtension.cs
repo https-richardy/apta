@@ -5,9 +5,15 @@ internal static class HttpClientsExtension
 {
     public static void AddClients(this IServiceCollection services, ISettings settings)
     {
-        services.AddHttpClient<IAuthenticationClient, AuthenticationClient>(client =>
+        services.AddScoped<HttpErrorInterceptor>();
+        services.AddScoped<AuthenticationInterceptor>();
+
+        var authenticationClient = services.AddHttpClient<IAuthenticationClient, AuthenticationClient>(client =>
         {
             client.BaseAddress = new Uri(settings.Authentication.Authority);
         });
+
+        authenticationClient.AddHttpMessageHandler<HttpErrorInterceptor>();
+        authenticationClient.AddHttpMessageHandler<AuthenticationInterceptor>();
     }
 }

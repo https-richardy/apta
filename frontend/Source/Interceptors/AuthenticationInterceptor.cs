@@ -1,4 +1,4 @@
-namespace Apta.WebUI.Authentication;
+namespace Apta.WebUI.Interceptors;
 
 public sealed class AuthenticationInterceptor(ILocalStorageService localStorage) : DelegatingHandler
 {

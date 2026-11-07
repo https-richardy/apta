@@ -7,10 +7,11 @@ public static class InfrastructureExtension
     {
         var settings = services.BindSettings(configuration);
 
-        services.AddBlazoredLocalStorage();
-        services.AddFluentUIComponents();
-        services.AddBearerAuthentication();
+        services.AddFluentUIComponents(library => library.ServiceLifetime = ServiceLifetime.Singleton);
         services.AddClients(settings);
+
+        services.AddBlazoredLocalStorage();
+        services.AddBearerAuthentication();
         services.AddValidation();
     }
 }

@@ -9,7 +9,6 @@ internal static class AuthenticationExtension
         services.AddCascadingAuthenticationState();
 
         services.AddScoped<JwtBearerAuthenticationStateProvider>();
-        services.AddScoped<AuthenticationInterceptor>();
         services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<JwtBearerAuthenticationStateProvider>());
     }
 }
