@@ -1,0 +1,18 @@
+namespace Apta.WebApi.Extensions;
+
+[ExcludeFromCodeCoverage(Justification = "contains only CORS configuration with no business logic.")]
+public static class CorsConfigurationExtension
+{
+    public static void AddCorsConfiguration(this IServiceCollection services)
+    {
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin();
+                policy.AllowAnyHeader();
+                policy.AllowAnyMethod();
+            });
+        });
+    }
+}

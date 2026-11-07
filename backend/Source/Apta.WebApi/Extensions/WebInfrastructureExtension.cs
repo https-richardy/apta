@@ -8,6 +8,7 @@ public static class WebInfrastructureExtension
         services.AddOpenApi();
         services.AddControllers();
 
+        services.AddCorsConfiguration();
         services.AddHttpContextAccessor();
         services.AddEndpointsApiExplorer();
         services.AddBearerAuthentication();
