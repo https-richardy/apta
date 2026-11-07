@@ -1,4 +1,5 @@
 @inherits LayoutComponentBase
+@inject IThemeService ThemeService
 
 <FluentLayout>
     <FluentLayoutItem Area="LayoutArea.Header" Style="background: transparent; color: var(--colorNeutralForeground1); border-bottom: 1px solid var(--colorNeutralStroke2);">
@@ -38,4 +39,12 @@
     private static bool _navigationVisible = true;
     private static void ToggleNavigation() =>
         _navigationVisible = !_navigationVisible;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await ThemeService.SetThemeAsync(ThemeMode.Light);
+        }
+    }
 }
