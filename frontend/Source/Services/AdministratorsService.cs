@@ -17,4 +17,20 @@ public sealed class AdministratorsService(IQueryClient queryClient, IAdministrat
                 return result.Data;
             }
         });
+
+    public IMutation<AdministratorCreationScheme, AdministratorScheme> CreateMutation { get; } =
+        queryClient.CreateMutation(new MutationOptions<AdministratorCreationScheme, AdministratorScheme>
+        {
+            OnSuccess = (_, _) => queryClient.Invalidate(key => key.ToString().StartsWith("administrators")),
+            Mutator = async (scheme, cancellation) =>
+            {
+                var result = await administratorsClient.CreateAdministratorAsync(scheme, cancellation);
+                if (result is not { IsSuccess: true, Data: not null })
+                {
+                    throw new InvalidOperationException("não foi possível criar a administradora");
+                }
+
+                return result.Data;
+            }
+        });
 }

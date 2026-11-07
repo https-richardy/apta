@@ -4,7 +4,6 @@
 @implements IDisposable
 
 @inject AdministratorsService AdministratorsService
-@inject IAdministratorsClient AdministratorsClient
 @inject IDialogService DialogService
 
 <PageTitle>Administradoras</PageTitle>
@@ -52,10 +51,6 @@
             return;
         }
 
-        var creation = await AdministratorsClient.CreateAdministratorAsync(model);
-        if (creation.IsSuccess)
-        {
-            AdministratorsService.Query.Refetch();
-        }
+        AdministratorsService.CreateMutation.Execute(model);
     }
 }
