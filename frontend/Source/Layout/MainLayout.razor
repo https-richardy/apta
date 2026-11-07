@@ -1,15 +1,19 @@
 @inherits LayoutComponentBase
 
 <FluentLayout>
-    <FluentLayoutItem Area="LayoutArea.Header">
-        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="12" Style="padding: 0 0.75rem;">
-            <FluentButton Appearance="ButtonAppearance.Subtle" IconOnly="true" IconStart="@NavigationIcon" Color="var(--colorNeutralForegroundOnBrand)" Title="Mostrar ou ocultar o menu" OnClick="ToggleNavigation" />
+    <FluentLayoutItem Area="LayoutArea.Header" Style="background: transparent; color: var(--colorNeutralForeground1); border-bottom: 1px solid var(--colorNeutralStroke2);">
+        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="12" Width="100%" Style="padding: 0 0.75rem;">
+            <FluentButton Appearance="ButtonAppearance.Transparent" IconOnly="true" IconStart="@NavigationIcon" Title="Mostrar ou ocultar o menu" OnClick="ToggleNavigation" />
+            <FluentSpacer />
+
+            <FluentButton Appearance="ButtonAppearance.Transparent" IconOnly="true" IconStart="@NotificationIcon" Title="Notificações" />
+            <FluentButton Appearance="ButtonAppearance.Transparent" IconOnly="true" IconStart="@ProfileIcon" Title="Perfil" />
         </FluentStack>
     </FluentLayoutItem>
 
     @if (_navigationVisible)
     {
-        <FluentLayoutItem Area="LayoutArea.Navigation">
+        <FluentLayoutItem Area="LayoutArea.Navigation" Style="background: transparent; border-right: 1px solid var(--colorNeutralStroke2);">
             <NavMenu />
         </FluentLayoutItem>
     }
@@ -23,6 +27,8 @@
 @code {
     private static Icon CollapseIcon = new Size28.PanelLeftContract();
     private static Icon ExpandIcon = new Size28.PanelLeftExpand();
+    private static Icon NotificationIcon = new Size28.Alert();
+    private static Icon ProfileIcon = new Size28.PersonCircle();
 
     /* display the collapse icon when the navigation is visible, and the expand icon when it is hidden */
     private static Icon NavigationIcon => _navigationVisible
