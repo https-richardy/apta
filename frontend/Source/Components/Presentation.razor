@@ -1,0 +1,33 @@
+<FluentStack Orientation="Orientation.Horizontal" HorizontalGap="16" Style="width: 100%;">
+    <div style="flex: 0 0 auto; align-self: stretch; width: 4px; min-height: 2.5rem; border-radius: 999px; background: var(--colorBrandBackground);"></div>
+
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="6" Style="width: 100%;">
+        <div style="font-family: var(--fontFamilyBase, inherit); font-size: var(--fontSizeHero700, 1.75rem); font-weight: var(--fontWeightBold, 700); line-height: var(--lineHeightHero700, 2.25rem); letter-spacing: 0.02em; text-transform: uppercase; color: var(--colorNeutralForeground1);">
+            @Title
+        </div>
+
+        @if (ChildContent is not null)
+        {
+            <div style="font-size: var(--fontSizeBase300, 0.9rem); line-height: var(--lineHeightBase300, 1.35rem); color: var(--colorNeutralForeground2); max-width: 68ch;">
+                @ChildContent
+            </div>
+        }
+        else if (!string.IsNullOrWhiteSpace(Description))
+        {
+            <div style="font-size: var(--fontSizeBase300, 0.9rem); line-height: var(--lineHeightBase300, 1.35rem); color: var(--colorNeutralForeground2); max-width: 68ch;">
+                @Description
+            </div>
+        }
+    </FluentStack>
+</FluentStack>
+
+@code {
+    [Parameter, EditorRequired]
+    public string Title { get; set; } = default!;
+
+    [Parameter]
+    public string? Description { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}
