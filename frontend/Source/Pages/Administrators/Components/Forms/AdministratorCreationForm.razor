@@ -1,0 +1,32 @@
+<EditForm Model="Model" OnValidSubmit="OnValidSubmit">
+    <FluentValidationValidator />
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="width: 100%;">
+        <div style="width: 100%;">
+            <label style="font-size: 0.85rem; font-weight: 600;">Nome</label>
+            <FluentTextInput @bind-Value="Model.Name" Placeholder="EMBRACON" Style="width: 100%;" MessageCondition="@(_ => false)" />
+            <ValidationMessage For="@(() => Model.Name)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+        </div>
+
+        <div style="width: 100%;">
+            <label style="font-size: 0.85rem; font-weight: 600;">Código BACEN</label>
+            <FluentTextInput @bind-Value="Model.Code" Placeholder="58113812" Style="width: 100%;" MessageCondition="@(_ => false)" />
+            <ValidationMessage For="@(() => Model.Code)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+        </div>
+
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+            <FluentButton Type="ButtonType.Submit" Appearance="ButtonAppearance.Primary">Salvar</FluentButton>
+            <FluentButton Appearance="ButtonAppearance.Default" OnClick="OnCancel">Cancelar</FluentButton>
+        </FluentStack>
+    </FluentStack>
+</EditForm>
+
+@code {
+    [Parameter]
+    public AdministratorCreationScheme Model { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+}
