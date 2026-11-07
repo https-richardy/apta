@@ -23,9 +23,12 @@ global using Apta.WebUI.Transport;
 global using Apta.WebUI.Transport.Administrators;
 global using Apta.WebUI.Transport.Authentication;
 global using Apta.WebUI.Interceptors;
+global using Apta.WebUI.Services;
 global using Apta.WebUI.Utilities;
 global using Apta.WebUI.Validators;
 
 global using Blazored.LocalStorage;
+global using DotNetQuery.Core;
+global using DotNetQuery.Extensions.DependencyInjection;
 global using FluentValidation;
 global using HttpsRichardy.Internal.Essentials.Patterns;

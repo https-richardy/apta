@@ -8,8 +8,15 @@ public static class InfrastructureExtension
         var settings = services.BindSettings(configuration);
 
         services.AddFluentUIComponents(library => library.ServiceLifetime = ServiceLifetime.Singleton);
-        services.AddClients(settings);
+        services.AddDotNetQuery(options =>
+        {
+            options.ExecutionMode = QueryExecutionMode.Csr;
+            options.StaleTime = TimeSpan.FromMinutes(1);
+            options.CacheTime = TimeSpan.FromMinutes(5);
+        });
 
+        services.AddClients(settings);
+        services.AddServices();
         services.AddBlazoredLocalStorage();
         services.AddBearerAuthentication();
         services.AddValidation();
