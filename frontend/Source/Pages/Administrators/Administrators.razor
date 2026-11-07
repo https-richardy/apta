@@ -7,10 +7,6 @@
 @inject IAdministratorsClient AdministratorsClient
 @inject IDialogService DialogService
 
-@{
-    var state = AdministratorsService.Query.CurrentState;
-}
-
 <PageTitle>Administradoras</PageTitle>
 
 <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" Style="width: 100%;">
@@ -21,23 +17,7 @@
                 <FluentSpacer />
                 <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
             </FluentStack>
-
-            @switch (state)
-            {
-                case { HasError: true }:
-                    <FluentLabel Style="color: var(--error, #d13438);">
-                        Não foi possível carregar as administradoras.
-                    </FluentLabel>
-                    break;
-
-                case { CurrentData: { } administrators }:
-                    <AdministratorsTable Administrators="administrators.Items" />
-                    break;
-
-                default:
-                    <Skeleton />
-                    break;
-            }
+            <AdministratorContent State="AdministratorsService.Query.CurrentState" />
         </FluentStack>
     </div>
 </FluentStack>
