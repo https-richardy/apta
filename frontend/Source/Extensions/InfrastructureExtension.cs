@@ -11,5 +11,6 @@ public static class InfrastructureExtension
         services.AddFluentUIComponents();
         services.AddBearerAuthentication();
         services.AddClients(settings);
+        services.AddValidation();
     }
 }

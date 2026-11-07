@@ -1,32 +1,33 @@
-<FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="width: 100%;">
-    <LoginField Label="Email" Value="@Email" ValueChanged="@EmailChanged" Type="TextInputType.Email" Placeholder="seu@email.com" Icon="@EmailIcon" />
-    <LoginField Label="Senha" Value="@Password" ValueChanged="@PasswordChanged" Type="TextInputType.Password" Placeholder="••••••••" Icon="@PasswordIcon" />
+<EditForm Model="Credentials" OnValidSubmit="OnValidSubmit">
+    <FluentValidationValidator />
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="width: 100%;">
+        <div style="width: 100%;">
+            <LoginField Label="Email" @bind-Value="Credentials.Email" Type="TextInputType.Email" Placeholder="seu@email.com" Icon="@EmailIcon" />
+            <ValidationMessage For="@(() => Credentials.Email)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+        </div>
 
-    <FluentButton Appearance="ButtonAppearance.Primary" @onclick="OnSubmit" Style="width: 100%;">
-        Entrar
-    </FluentButton>
+        <div style="width: 100%;">
+            <LoginField Label="Senha" @bind-Value="Credentials.Password" Type="TextInputType.Password" Placeholder="••••••••" Icon="@PasswordIcon" />
+            <ValidationMessage For="@(() => Credentials.Password)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+        </div>
 
-    <div style="font-size: 0.8rem; opacity: 0.6; text-align: center; line-height: 1.5;">
-        Ao clicar em continuar, você concorda com nossos <strong style="text-decoration: underline;">Termos de Serviço</strong> e <strong style="text-decoration: underline;">Política de Privacidade</strong>.
-    </div>
-</FluentStack>
+        <FluentButton Type="ButtonType.Submit" Appearance="ButtonAppearance.Primary" Style="width: 100%;">
+            Entrar
+        </FluentButton>
+
+        <div style="font-size: 0.8rem; opacity: 0.6; text-align: center; line-height: 1.5;">
+            Ao clicar em continuar, você concorda com nossos <strong style="text-decoration: underline;">Termos de Serviço</strong> e <strong style="text-decoration: underline;">Política de Privacidade</strong>.
+        </div>
+    </FluentStack>
+</EditForm>
 
 @code {
     private static readonly Icon EmailIcon = new Size20.Mail();
     private static readonly Icon PasswordIcon = new Size20.LockClosed();
 
     [Parameter]
-    public string? Email { get; set; }
+    public AuthenticationCredentialsScheme Credentials { get; set; } = new();
 
     [Parameter]
-    public string? Password { get; set; }
-
-    [Parameter]
-    public EventCallback<string?> EmailChanged { get; set; }
-
-    [Parameter]
-    public EventCallback<string?> PasswordChanged { get; set; }
-
-    [Parameter]
-    public EventCallback OnSubmit { get; set; }
+    public EventCallback OnValidSubmit { get; set; }
 }

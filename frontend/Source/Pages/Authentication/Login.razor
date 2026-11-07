@@ -9,7 +9,7 @@
 <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalAlignment="VerticalAlignment.Center" VerticalGap="24" Style="height: 100vh; width: 100%;">
     <LoginHeader />
     <div style="width: 360px; max-width: 90%;">
-        <LoginForm @bind-Email="_credentials.Email" @bind-Password="_credentials.Password" OnSubmit="HandleSubmit" />
+        <LoginForm Credentials="@_credentials" OnValidSubmit="HandleSubmit" />
     </div>
 </FluentStack>
 
@@ -26,6 +26,7 @@
         }
 
         await AuthenticationState.AuthenticateAsync(result.Data.AccessToken);
+        await NotificationService.ShowSuccessToastAsync("Autenticação bem-sucedida", "Sua identidade foi validada, as credenciais foram validadas e uma sessão segura foi estabelecida.");
 
         Navigation.NavigateTo("/");
     }
