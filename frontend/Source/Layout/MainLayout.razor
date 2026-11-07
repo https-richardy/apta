@@ -1,13 +1,35 @@
 @inherits LayoutComponentBase
 
 <FluentLayout>
-    <FluentLayoutItem Area="LayoutArea.Header">APTA</FluentLayoutItem>
-    <FluentLayoutItem Area="LayoutArea.Navigation">
-        <NavMenu />
+    <FluentLayoutItem Area="LayoutArea.Header">
+        <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalGap="12" Style="padding: 0 0.75rem;">
+            <FluentButton Appearance="ButtonAppearance.Subtle" IconOnly="true" IconStart="@NavigationIcon" Color="var(--colorNeutralForegroundOnBrand)" Title="Mostrar ou ocultar o menu" OnClick="ToggleNavigation" />
+        </FluentStack>
     </FluentLayoutItem>
+
+    @if (_navigationVisible)
+    {
+        <FluentLayoutItem Area="LayoutArea.Navigation">
+            <NavMenu />
+        </FluentLayoutItem>
+    }
 
     <FluentLayoutItem Area="LayoutArea.Content" Style="padding: 1.5rem 2rem;">
         @Body
     </FluentLayoutItem>
 </FluentLayout>
 <FluentProviders />
+
+@code {
+    private static Icon CollapseIcon = new Size28.PanelLeftContract();
+    private static Icon ExpandIcon = new Size28.PanelLeftExpand();
+
+    /* display the collapse icon when the navigation is visible, and the expand icon when it is hidden */
+    private static Icon NavigationIcon => _navigationVisible
+        ? CollapseIcon
+        : ExpandIcon;
+
+    private static bool _navigationVisible = true;
+    private static void ToggleNavigation() =>
+        _navigationVisible = !_navigationVisible;
+}
