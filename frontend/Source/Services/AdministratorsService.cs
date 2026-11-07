@@ -5,7 +5,7 @@ public sealed class AdministratorsService(IQueryClient queryClient, IAdministrat
     public IQuery<AdministratorFiltersParameters, Pagination<AdministratorScheme>> Query { get; private set; } =
         queryClient.CreateQuery(new QueryOptions<AdministratorFiltersParameters, Pagination<AdministratorScheme>>
         {
-            KeyFactory = filters => QueryKey.From("administrators", filters.Page, filters.PageSize),
+            KeyFactory = filters => QueryKey.From("administrators", filters),
             Fetcher = async (filters, cancellation) =>
             {
                 var result = await administratorsClient.GetAdministratorsAsync(filters, cancellation);
