@@ -4,12 +4,14 @@
         <div style="width: 100%;">
             <label style="font-size: 0.85rem; font-weight: 600;">Nome</label>
             <FluentTextInput Value="@Model.Name" ValueChanged="@(value => Model.Name = value ?? string.Empty)" Placeholder="EMBRACON" Style="width: 100%;" />
+            <FluentLabel Size="LabelSize.Small" Style="display: block; margin-top: 4px; opacity: 0.6;">Nome da administradora autorizada pelo BACEN.</FluentLabel>
             <ValidationMessage For="@(() => Model.Name)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
         </div>
 
         <div style="width: 100%;">
             <label style="font-size: 0.85rem; font-weight: 600;">Código BACEN</label>
             <FluentTextInput Value="@Model.Code" ValueChanged="@(value => Model.Code = value ?? string.Empty)" Placeholder="58113812" Style="width: 100%;" />
+            <FluentLabel Size="LabelSize.Small" Style="display: block; margin-top: 4px; opacity: 0.6;">Código ISPB: os 8 primeiros dígitos do CNPJ da administradora.</FluentLabel>
             <ValidationMessage For="@(() => Model.Code)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
         </div>
 
