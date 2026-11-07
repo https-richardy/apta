@@ -13,7 +13,15 @@ internal static class HttpClientsExtension
             client.BaseAddress = new Uri(settings.Authentication.Authority);
         });
 
+        var administratorsClient = services.AddHttpClient<IAdministratorsClient, AdministratorsClient>(client =>
+        {
+            client.BaseAddress = new Uri(settings.Gateway.Address);
+        });
+
         authenticationClient.AddHttpMessageHandler<HttpErrorInterceptor>();
         authenticationClient.AddHttpMessageHandler<AuthenticationInterceptor>();
+
+        administratorsClient.AddHttpMessageHandler<HttpErrorInterceptor>();
+        administratorsClient.AddHttpMessageHandler<AuthenticationInterceptor>();
     }
 }
