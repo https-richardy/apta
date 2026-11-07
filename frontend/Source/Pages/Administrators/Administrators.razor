@@ -1,0 +1,59 @@
+@page "/administradoras"
+@attribute [Authorize]
+
+@inject IAdministratorsClient AdministratorsClient
+@inject IDialogService DialogService
+
+<PageTitle>Administradoras</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" Style="width: 100%;">
+    <div style="width: 960px; max-width: 95%;">
+        <FluentStack Orientation="Orientation.Vertical" VerticalGap="20">
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" Width="100%">
+                <FluentSpacer />
+                <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenCreateAsync">Adicionar</FluentButton>
+            </FluentStack>
+
+            <AdministratorsTable Administrators="_administrators" />
+        </FluentStack>
+    </div>
+</FluentStack>
+
+@code {
+    private static readonly Icon AddIcon = new Size20.Add();
+
+    private IReadOnlyCollection<AdministratorScheme> _administrators = [];
+
+    protected override async Task OnInitializedAsync() =>
+        await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        var result = await AdministratorsClient.GetAdministratorsAsync(new AdministratorFiltersParameters());
+        if (result.IsSuccess && result.Data is not null)
+        {
+            _administrators = result.Data.Items;
+        }
+    }
+
+    private async Task OpenCreateAsync()
+    {
+        var result = await DialogService.ShowDrawerAsync<AdministratorCreationSheet>(options =>
+        {
+            options.Data = new AdministratorCreationScheme();
+            options.Alignment = DialogAlignment.End;
+            options.Width = "420px";
+        });
+
+        if (result.Cancelled || result.GetValue<AdministratorCreationScheme>() is not { } model)
+        {
+            return;
+        }
+
+        var creation = await AdministratorsClient.CreateAdministratorAsync(model);
+        if (creation.IsSuccess)
+        {
+            await LoadAsync();
+        }
+    }
+}
