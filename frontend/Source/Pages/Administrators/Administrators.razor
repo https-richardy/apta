@@ -1,8 +1,15 @@
 @page "/administradoras"
-@attribute [Authorize]
 
+@attribute [Authorize]
+@implements IDisposable
+
+@inject AdministratorsService AdministratorsService
 @inject IAdministratorsClient AdministratorsClient
 @inject IDialogService DialogService
+
+@{
+    var state = AdministratorsService.Query.CurrentState;
+}
 
 <PageTitle>Administradoras</PageTitle>
 
@@ -12,10 +19,25 @@
             <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Top" Width="100%">
                 <Presentation Title="Administradoras" Description="Gerencie aqui as administradoras. As administradoras são as instituições autorizadas pelo BACEN responsáveis por constituir e administrar os grupos de consórcio." />
                 <FluentSpacer />
-                <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenCreateAsync">Adicionar</FluentButton>
+                <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
             </FluentStack>
 
-            <AdministratorsTable Administrators="_administrators" />
+            @switch (state)
+            {
+                case { HasError: true }:
+                    <FluentLabel Style="color: var(--error, #d13438);">
+                        Não foi possível carregar as administradoras.
+                    </FluentLabel>
+                    break;
+
+                case { CurrentData: { } administrators }:
+                    <AdministratorsTable Administrators="administrators.Items" />
+                    break;
+
+                default:
+                    <Skeleton />
+                    break;
+            }
         </FluentStack>
     </div>
 </FluentStack>
@@ -23,21 +45,20 @@
 @code {
     private static readonly Icon AddIcon = new Size20.Add();
 
-    private IReadOnlyCollection<AdministratorScheme> _administrators = [];
+    private AdministratorFiltersParameters _filters = new();
+    private IDisposable? _subscription;
 
-    protected override async Task OnInitializedAsync() =>
-        await LoadAsync();
-
-    private async Task LoadAsync()
+    public void Dispose() => _subscription?.Dispose();
+    protected override void OnInitialized()
     {
-        var result = await AdministratorsClient.GetAdministratorsAsync(new AdministratorFiltersParameters());
-        if (result.IsSuccess && result.Data is not null)
-        {
-            _administrators = result.Data.Items;
-        }
+        _subscription = AdministratorsService.Query.State
+            .Subscribe(_ => InvokeAsync(StateHasChanged));
+
+        AdministratorsService.Query
+            .SetArgs(_filters);
     }
 
-    private async Task OpenCreateAsync()
+    private async Task OpenSheetAsync()
     {
         var result = await DialogService.ShowDrawerAsync<AdministratorCreationSheet>(options =>
         {
@@ -54,7 +75,7 @@
         var creation = await AdministratorsClient.CreateAdministratorAsync(model);
         if (creation.IsSuccess)
         {
-            await LoadAsync();
+            AdministratorsService.Query.Refetch();
         }
     }
 }

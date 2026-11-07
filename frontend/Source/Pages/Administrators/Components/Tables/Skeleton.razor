@@ -1,0 +1,11 @@
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="8" Style="width: 100%;">
+    @for (var row = 0; row < Rows; row++)
+    {
+        <FluentSkeleton Shimmer="true" Width="100%" Height="40px" Style="border-radius: 6px;" />
+    }
+</FluentStack>
+
+@code {
+    [Parameter]
+    public int Rows { get; set; } = 5;
+}
