@@ -2,15 +2,13 @@
 @inject NavigationManager Navigation
 
 <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalAlignment="VerticalAlignment.Center" VerticalGap="16" Style="height: 100%; text-align: center;">
-    <FluentIcon Value="@(new Size48.Search())" Color="Color.Primary" Width="84px" />
-
     <div style="font-size: 4.5rem; font-weight: 700; line-height: 1;">404</div>
     <div style="font-size: 1.15rem; font-weight: 600;">Oops... a página que você procura não foi encontrada.</div>
     <div style="opacity: 0.7; max-width: 420px;">
         Ela pode ter sido movida ou não existe mais. Confira o endereço ou volte ao início.
     </div>
 
-    <FluentButton Appearance="ButtonAppearance.Primary" @onclick="GoHome">
+    <FluentButton Appearance="ButtonAppearance.Transparent" @onclick="GoHome">
         Voltar ao início
     </FluentButton>
 </FluentStack>
