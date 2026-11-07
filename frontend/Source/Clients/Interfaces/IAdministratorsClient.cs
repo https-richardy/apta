@@ -1,0 +1,14 @@
+namespace Apta.WebUI.Clients.Interfaces;
+
+public interface IAdministratorsClient
+{
+    public Task<Result<AdministratorScheme>> CreateAdministratorAsync(
+        AdministratorCreationScheme parameters,
+        CancellationToken cancellation = default
+    );
+
+    public Task<Result<Pagination<AdministratorScheme>>> GetAdministratorsAsync(
+        AdministratorFiltersParameters parameters,
+        CancellationToken cancellation = default
+    );
+}
