@@ -1,11 +1,7 @@
 @page "/authentication/protocol/connect/"
 
 @layout AuthenticationLayout
-@implements IDisposable
-
 @inject AuthenticationService AuthenticationService
-@inject INotificationService NotificationService
-@inject NavigationManager Navigation
 
 <PageTitle>Autenticação de Identidade | Apta™</PageTitle>
 
@@ -19,38 +15,8 @@
 @code {
     private readonly AuthenticationCredentialsScheme _credentials = new();
 
-    private IDisposable? _successSubscription;
-    private IDisposable? _failureSubscription;
-
-    protected override void OnInitialized()
-    {
-        _successSubscription = AuthenticationService.AuthenticationMutation.Success
-            .Subscribe(_ => InvokeAsync(HandleSuccessAsync));
-
-        _failureSubscription = AuthenticationService.AuthenticationMutation.Failure
-            .Subscribe(_ => InvokeAsync(HandleFailureAsync));
-    }
-
     private void HandleSubmit()
     {
         AuthenticationService.AuthenticationMutation.Execute(_credentials);
-    }
-
-    private async Task HandleSuccessAsync()
-    {
-        await NotificationService.ShowSuccessToastAsync("Autenticação bem-sucedida", "Suas credenciais foram validadas e uma sessão segura foi estabelecida.");
-
-        Navigation.NavigateTo("/");
-    }
-
-    private async Task HandleFailureAsync()
-    {
-        await NotificationService.ShowErrorToastAsync("Falha na autenticação", "Verifique se o seu email e a sua senha estão corretos e tente novamente.");
-    }
-
-    public void Dispose()
-    {
-        _successSubscription?.Dispose();
-        _failureSubscription?.Dispose();
     }
 }
