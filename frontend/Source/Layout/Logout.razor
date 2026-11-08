@@ -1,0 +1,49 @@
+@implements IDisposable
+
+@inject IDialogService DialogService
+@inject INotificationService NotificationService
+
+@inject AuthenticationService AuthenticationService
+@inject JwtBearerAuthenticationStateProvider AuthenticationState
+@inject NavigationManager Navigation
+
+<FluentButton Appearance="ButtonAppearance.Transparent" IconOnly="true" IconStart="@SignOutIcon" Title="Sair" OnClick="HandleLogoutAsync" />
+
+@code {
+    private static Icon SignOutIcon = new Size28.ArrowExit();
+    private static IDisposable? _subscription;
+
+    public void Dispose() => _subscription?.Dispose();
+    protected override void OnInitialized()
+    {
+        _subscription = AuthenticationService.LogoutMutation.Settled
+            .Subscribe(_ => InvokeAsync(RedirectToLoginAsync));
+    }
+
+    private async Task HandleLogoutAsync()
+    {
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            message: "Tem certeza de que deseja encerrar a sua sessão?",
+            title: "Sair da conta",
+            primaryButton: "Encerrar sessão",
+            secondaryButton: "Cancelar"
+        );
+
+        if (confirmation.Cancelled)
+        {
+            return;
+        }
+
+        var refreshToken = await AuthenticationState.GetRefreshTokenAsync();
+
+        AuthenticationService.LogoutMutation.Execute(refreshToken ?? string.Empty);
+    }
+
+    private async Task RedirectToLoginAsync()
+    {
+        await NotificationService.CloseAllToastsAsync();
+        await NotificationService.ShowSuccessToastAsync("Sessão encerrada", "Sua sessão foi encerrada com segurança.");
+
+        Navigation.NavigateTo("/authentication/protocol/connect/");
+    }
+}
