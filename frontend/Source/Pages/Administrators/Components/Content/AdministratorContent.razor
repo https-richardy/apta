@@ -1,9 +1,9 @@
 @switch (State)
 {
     case { HasError: true }:
-        <FluentLabel Style="color: var(--error, #d13438);">
-            Não foi possível carregar as administradoras.
-        </FluentLabel>
+        <FluentMessageBar Intent="MessageBarIntent.Error">
+            Não foi possível carregar as administradoras, se o problema persistir, contate o suporte técnico.
+        </FluentMessageBar>
         break;
 
     case { CurrentData: { } administrators }:
