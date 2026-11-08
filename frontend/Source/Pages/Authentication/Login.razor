@@ -1,8 +1,9 @@
 @page "/authentication/protocol/connect/"
-@layout AuthenticationLayout
 
-@inject IAuthenticationClient AuthenticationClient
-@inject JwtBearerAuthenticationStateProvider AuthenticationState
+@layout AuthenticationLayout
+@implements IDisposable
+
+@inject AuthenticationService AuthenticationService
 @inject INotificationService NotificationService
 @inject NavigationManager Navigation
 
@@ -18,18 +19,38 @@
 @code {
     private readonly AuthenticationCredentialsScheme _credentials = new();
 
-    private async Task HandleSubmit()
-    {
-        var result = await AuthenticationClient.AuthenticateAsync(_credentials);
-        if (result.IsFailure || result.Data is null)
-        {
-            await NotificationService.ShowErrorToastAsync("Falha na autenticação", "Verifique se o seu email e a sua senha estão corretos e tente novamente.");
-            return;
-        }
+    private IDisposable? _successSubscription;
+    private IDisposable? _failureSubscription;
 
-        await AuthenticationState.AuthenticateAsync(result.Data.AccessToken, result.Data.RefreshToken);
+    protected override void OnInitialized()
+    {
+        _successSubscription = AuthenticationService.AuthenticationMutation.Success
+            .Subscribe(_ => InvokeAsync(HandleSuccessAsync));
+
+        _failureSubscription = AuthenticationService.AuthenticationMutation.Failure
+            .Subscribe(_ => InvokeAsync(HandleFailureAsync));
+    }
+
+    private void HandleSubmit()
+    {
+        AuthenticationService.AuthenticationMutation.Execute(_credentials);
+    }
+
+    private async Task HandleSuccessAsync()
+    {
         await NotificationService.ShowSuccessToastAsync("Autenticação bem-sucedida", "Suas credenciais foram validadas e uma sessão segura foi estabelecida.");
 
         Navigation.NavigateTo("/");
+    }
+
+    private async Task HandleFailureAsync()
+    {
+        await NotificationService.ShowErrorToastAsync("Falha na autenticação", "Verifique se o seu email e a sua senha estão corretos e tente novamente.");
+    }
+
+    public void Dispose()
+    {
+        _successSubscription?.Dispose();
+        _failureSubscription?.Dispose();
     }
 }
