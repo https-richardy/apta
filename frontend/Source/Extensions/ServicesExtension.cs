@@ -6,5 +6,6 @@ internal static class ServicesExtension
     public static void AddServices(this IServiceCollection services)
     {
         services.AddScoped<AdministratorsService>();
+        services.AddScoped<AuthenticationService>();
     }
 }

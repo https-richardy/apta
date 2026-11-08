@@ -21,16 +21,20 @@ public sealed class JwtBearerAuthenticationStateProvider(ILocalStorageService lo
         return new AuthenticationState(new ClaimsPrincipal(identity));
     }
 
-    public async Task AuthenticateAsync(string token)
+    public async Task AuthenticateAsync(string accessToken, string refreshToken)
     {
-        await localStorage.SetItemAsStringAsync("apta:authentication", token);
+        await localStorage.SetItemAsStringAsync("apta:authentication", accessToken);
+        await localStorage.SetItemAsStringAsync("apta:refresh", refreshToken);
 
         NotifyAuthenticationStateChanged(GetAuthenticationStateAsync());
     }
 
+    public async Task<string?> GetRefreshTokenAsync() =>
+        await localStorage.GetItemAsStringAsync("apta:refresh");
+
     public async Task LogoutAsync()
     {
-        await localStorage.RemoveItemAsync("apta:authentication");
+        await localStorage.RemoveItemsAsync(["apta:authentication", "apta:refresh"]);
 
         NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()))));
     }

@@ -27,7 +27,7 @@
             return;
         }
 
-        await AuthenticationState.AuthenticateAsync(result.Data.AccessToken);
+        await AuthenticationState.AuthenticateAsync(result.Data.AccessToken, result.Data.RefreshToken);
         await NotificationService.ShowSuccessToastAsync("Autenticação bem-sucedida", "Suas credenciais foram validadas e uma sessão segura foi estabelecida.");
 
         Navigation.NavigateTo("/");

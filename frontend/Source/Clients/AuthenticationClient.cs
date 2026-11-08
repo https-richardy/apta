@@ -39,4 +39,22 @@ public sealed class AuthenticationClient(HttpClient httpClient, ISettings settin
             ? Result<AuthenticationScheme>.Success(authentication)
             : Result<AuthenticationScheme>.Failure(Error.Unknown);
     }
+
+    public async Task<Result> LogoutAsync(String refreshToken, CancellationToken cancellation = default)
+    {
+        // https://www.rfc-editor.org/rfc/rfc7009
+        // revoke the keycloak session bound to the user's refresh token (backchannel logout)
+
+        var content = new FormUrlEncodedContent(
+        [
+            new("client_id", settings.Authentication.Audience),
+            new("refresh_token", refreshToken)
+        ]);
+
+        var response = await _httpClient.PostAsync("protocol/openid-connect/logout", content, cancellation);
+
+        return response.IsSuccessStatusCode
+            ? Result.Success()
+            : Result.Failure(Error.Unknown);
+    }
 }
