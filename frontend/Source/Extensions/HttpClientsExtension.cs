@@ -16,6 +16,7 @@ internal static class HttpClientsExtension
         var administratorsClient = services.AddHttpClient<IAdministratorsClient, AdministratorsClient>(client =>
         {
             client.BaseAddress = new Uri(settings.Gateway.Address);
+            client.Timeout = TimeSpan.Parse(settings.Gateway.Timeout);
         });
 
         authenticationClient.AddHttpMessageHandler<HttpErrorInterceptor>();
