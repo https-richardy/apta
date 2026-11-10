@@ -23,6 +23,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Source\Apta.Infrastructure\Apta.Infrastructure.csproj" />
+        <ProjectReference Include="..\Source\Apta.WebApi\Apta.WebApi.csproj" />
     </ItemGroup>
 
 </Project>

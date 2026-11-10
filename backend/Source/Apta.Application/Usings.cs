@@ -1,4 +1,5 @@
 global using System.ComponentModel;
+global using System.Text.Json.Serialization;
 
 global using Apta.Domain.Aggregates;
 global using Apta.Domain.Errors;

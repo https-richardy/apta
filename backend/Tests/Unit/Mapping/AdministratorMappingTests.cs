@@ -45,6 +45,23 @@ public sealed class AdministratorMappingTests
         Assert.Equal(scheme.Code, administrator.Code);
     }
 
+    [Fact(DisplayName = "when update administrator scheme is mapped, administrator fields are copied")]
+    public void When_Map_IsCalled_WithUpdateAdministratorScheme_Then_AdministratorFieldsAreMapped()
+    {
+        /* arrange: create update administrator scheme with representative values */
+        var scheme = _fixture.Build<UpdateAdministratorScheme>()
+            .With(administrator => administrator.Name, "EMBRACON")
+            .With(administrator => administrator.Code, "58113812")
+            .Create();
+
+        /* act: map update administrator scheme into administrator entity */
+        var administrator = _mapper.Map<Administrator>(scheme);
+
+        /* assert: verify all mapped properties */
+        Assert.Equal(scheme.Name, administrator.Name);
+        Assert.Equal(scheme.Code, administrator.Code);
+    }
+
     [Fact(DisplayName = "when administrator is mapped, administrator scheme fields are copied")]
     public void When_Map_IsCalled_WithAdministrator_Then_AdministratorSchemeFieldsAreMapped()
     {

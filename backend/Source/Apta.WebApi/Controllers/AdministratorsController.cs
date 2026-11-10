@@ -34,4 +34,24 @@ public sealed class AdministratorsController(IDispatcher dispatcher) : Controlle
                 StatusCode(StatusCodes.Status409Conflict, result.Error),
         };
     }
+
+    [HttpPut("{id}")]
+    [Authorize]
+    [EndpointDescription("updates an administrator identified by its unique identifier")]
+    public async Task<IActionResult> UpdateAdministratorAsync([FromRoute] string id, [FromBody] UpdateAdministratorScheme request, CancellationToken cancellation)
+    {
+        var result = await dispatcher.DispatchAsync(request with { Id = id }, cancellation);
+
+        return result switch
+        {
+            { IsSuccess: true } when result.Data is not null =>
+                StatusCode(StatusCodes.Status200OK, result.Data),
+
+            { IsFailure: true } when result.Error == AdministratorErrors.DoesNotExist =>
+                StatusCode(StatusCodes.Status404NotFound, result.Error),
+
+            { IsFailure: true } when result.Error == AdministratorErrors.AlreadyExists =>
+                StatusCode(StatusCodes.Status409Conflict, result.Error),
+        };
+    }
 }
