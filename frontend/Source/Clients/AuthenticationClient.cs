@@ -21,8 +21,7 @@ public sealed class AuthenticationClient(HttpClient httpClient, ISettings settin
 
             new("client_id", settings.Authentication.Audience),
             new("username", credentials.Email),
-            new("password", credentials.Password),
-
+            new("password", credentials.Password)
         ]);
 
         var response = await _httpClient.PostAsync("protocol/openid-connect/token", content, cancellation);
