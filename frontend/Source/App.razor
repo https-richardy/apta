@@ -4,8 +4,8 @@
             <Authorizing>
                 <p>Verificando autenticação...</p>
             </Authorizing>
-            <NotAuthorized>
-                <Forbidden />
+            <NotAuthorized Context="authentication">
+                <UnauthorizedRouteView Authentication="authentication" />
             </NotAuthorized>
         </AuthorizeRouteView>
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />

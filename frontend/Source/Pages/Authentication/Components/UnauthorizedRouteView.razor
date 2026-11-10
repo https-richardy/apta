@@ -1,0 +1,19 @@
+@inject NavigationManager Navigation
+
+@if (Authentication.User.Identity?.IsAuthenticated is true)
+{
+    <Forbidden />
+}
+
+@code {
+    [Parameter]
+    public AuthenticationState Authentication { get; set; } = default!;
+
+    protected override void OnInitialized()
+    {
+        if (Authentication.User.Identity?.IsAuthenticated is not true)
+        {
+            Navigation.NavigateTo("/authentication/protocol/connect/");
+        }
+    }
+}

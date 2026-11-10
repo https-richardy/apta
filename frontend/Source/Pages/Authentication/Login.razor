@@ -2,6 +2,7 @@
 
 @layout AuthenticationLayout
 @inject AuthenticationService AuthenticationService
+@inject NavigationManager Navigation
 
 <PageTitle>Autenticação de Identidade | Apta™</PageTitle>
 
@@ -13,7 +14,25 @@
 </FluentStack>
 
 @code {
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthenticationState { get; set; }
     private readonly AuthenticationCredentialsScheme _credentials = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (AuthenticationState is null)
+        {
+            return;
+        }
+
+        var authentication = await AuthenticationState;
+        if (authentication.User.Identity?.IsAuthenticated is not true)
+        {
+            return;
+        }
+
+        Navigation.NavigateTo("/");
+    }
 
     private void HandleSubmit()
     {
