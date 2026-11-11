@@ -6,15 +6,20 @@
     <PropertyColumn Property="@(administrator => administrator.UpdatedAt)" Title="Atualizado em" Format="dd/MM/yyyy" />
     <TemplateColumn Title="Ações">
         <FluentButton Appearance="ButtonAppearance.Transparent" IconStart="@EditIcon" Title="Atualizar" OnClick="@(() => OnUpdate.InvokeAsync(context))" />
+        <FluentButton Appearance="ButtonAppearance.Transparent" IconStart="@DeleteIcon" Title="Excluir" OnClick="@(() => OnDelete.InvokeAsync(context))" />
     </TemplateColumn>
 </FluentDataGrid>
 
 @code {
     private static readonly Icon EditIcon = new Size20.Edit();
+    private static readonly Icon DeleteIcon = new Size20.Delete();
 
     [Parameter]
     public IReadOnlyCollection<AdministratorScheme> Administrators { get; set; } = [];
 
     [Parameter]
     public EventCallback<AdministratorScheme> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback<AdministratorScheme> OnDelete { get; set; }
 }

@@ -5,6 +5,7 @@ public sealed class AdministratorsService
     public IQuery<AdministratorFiltersParameters, Pagination<AdministratorScheme>> Query { get; private set; }
     public IMutation<AdministratorCreationScheme, AdministratorScheme> CreateMutation { get; private set; }
     public IMutation<UpdateAdministratorScheme, AdministratorScheme> UpdateMutation { get; private set; }
+    public IMutation<AdministratorDeletionScheme, Result> DeletionMutation { get; private set; }
 
     public AdministratorsService(IQueryClient queryClient, IAdministratorsClient administratorsClient)
     {
@@ -50,6 +51,21 @@ public sealed class AdministratorsService
                 }
 
                 return result.Data;
+            }
+        });
+
+        DeletionMutation = queryClient.CreateMutation(new MutationOptions<AdministratorDeletionScheme, Result>
+        {
+            OnSuccess = (_, _) => Query.Refetch(),
+            Mutator = async (scheme, cancellation) =>
+            {
+                var result = await administratorsClient.DeleteAdministratorAsync(scheme, cancellation);
+                if (result.IsFailure)
+                {
+                    throw new InvalidOperationException("não foi possível excluir a administradora");
+                }
+
+                return result;
             }
         });
     }

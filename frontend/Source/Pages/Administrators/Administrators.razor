@@ -16,7 +16,7 @@
                 <FluentSpacer />
                 <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
             </FluentStack>
-            <AdministratorContent State="AdministratorsService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" />
+            <AdministratorContent State="AdministratorsService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" OnDelete="DeleteAsync" />
         </FluentStack>
     </div>
 </FluentStack>
@@ -76,5 +76,22 @@
         }
 
         AdministratorsService.UpdateMutation.Execute(model);
+    }
+
+    private async Task DeleteAsync(AdministratorScheme administrator)
+    {
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            message: $"Tem certeza de que deseja excluir a administradora \"{administrator.Name}\"? Esta ação não poderá ser desfeita.",
+            title: "Excluir administradora",
+            primaryButton: "Excluir",
+            secondaryButton: "Cancelar"
+        );
+
+        if (confirmation.Cancelled)
+        {
+            return;
+        }
+
+        AdministratorsService.DeletionMutation.Execute(new AdministratorDeletionScheme { Id = administrator.Id });
     }
 }

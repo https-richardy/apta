@@ -12,6 +12,11 @@ public interface IAdministratorsClient
         CancellationToken cancellation = default
     );
 
+    public Task<Result> DeleteAdministratorAsync(
+        AdministratorDeletionScheme parameters,
+        CancellationToken cancellation = default
+    );
+
     public Task<Result<Pagination<AdministratorScheme>>> GetAdministratorsAsync(
         AdministratorFiltersParameters parameters,
         CancellationToken cancellation = default

@@ -7,7 +7,7 @@
         break;
 
     case { CurrentData: { } administrators }:
-        <AdministratorsTable Administrators="administrators.Items" OnUpdate="OnUpdate" />
+        <AdministratorsTable Administrators="administrators.Items" OnUpdate="OnUpdate" OnDelete="OnDelete" />
         break;
 
     default:
@@ -21,4 +21,7 @@
 
     [Parameter]
     public EventCallback<AdministratorScheme> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback<AdministratorScheme> OnDelete { get; set; }
 }
