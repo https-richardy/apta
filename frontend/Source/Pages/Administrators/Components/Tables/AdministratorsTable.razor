@@ -1,12 +1,20 @@
-<FluentDataGrid Items="@Administrators.AsQueryable()" TGridItem="AdministratorScheme" GridTemplateColumns="2fr 2fr 1fr 1fr 1fr" Style="width: 100%;">
+<FluentDataGrid Items="@Administrators.AsQueryable()" TGridItem="AdministratorScheme" GridTemplateColumns="2fr 2fr 1fr 1fr 1fr auto" Style="width: 100%;">
     <PropertyColumn Property="@(administrator => administrator.Id)" Title="Identificador" />
     <PropertyColumn Property="@(administrator => administrator.Name)" Title="Nome" Sortable="true" />
     <PropertyColumn Property="@(administrator => administrator.Code)" Title="Código" />
     <PropertyColumn Property="@(administrator => administrator.CreatedAt)" Title="Criado em" Format="dd/MM/yyyy" />
     <PropertyColumn Property="@(administrator => administrator.UpdatedAt)" Title="Atualizado em" Format="dd/MM/yyyy" />
+    <TemplateColumn Title="Ações">
+        <FluentButton Appearance="ButtonAppearance.Transparent" IconStart="@EditIcon" Title="Atualizar" OnClick="@(() => OnUpdate.InvokeAsync(context))" />
+    </TemplateColumn>
 </FluentDataGrid>
 
 @code {
+    private static readonly Icon EditIcon = new Size20.Edit();
+
     [Parameter]
     public IReadOnlyCollection<AdministratorScheme> Administrators { get; set; } = [];
+
+    [Parameter]
+    public EventCallback<AdministratorScheme> OnUpdate { get; set; }
 }

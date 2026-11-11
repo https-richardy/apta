@@ -16,7 +16,7 @@
                 <FluentSpacer />
                 <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
             </FluentStack>
-            <AdministratorContent State="AdministratorsService.Query.CurrentState" />
+            <AdministratorContent State="AdministratorsService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" />
         </FluentStack>
     </div>
 </FluentStack>
@@ -52,5 +52,29 @@
         }
 
         AdministratorsService.CreateMutation.Execute(model);
+    }
+
+    private async Task OpenUpdateSheetAsync(AdministratorScheme administrator)
+    {
+        var scheme = new UpdateAdministratorScheme
+        {
+            Id = administrator.Id,
+            Name = administrator.Name,
+            Code = administrator.Code
+        };
+
+        var result = await DialogService.ShowDrawerAsync<AdministratorUpdateSheet>(options =>
+        {
+            options.Data = scheme;
+            options.Alignment = DialogAlignment.End;
+            options.Width = "420px";
+        });
+
+        if (result.Cancelled || result.GetValue<UpdateAdministratorScheme>() is not { } model)
+        {
+            return;
+        }
+
+        AdministratorsService.UpdateMutation.Execute(model);
     }
 }

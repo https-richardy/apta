@@ -34,6 +34,30 @@ public sealed class AdministratorsClient(HttpClient httpClient, INotificationSer
             : Result<AdministratorScheme>.Failure(Error.Unknown);
     }
 
+    public async Task<Result<AdministratorScheme>> UpdateAdministratorAsync(UpdateAdministratorScheme parameters, CancellationToken cancellation = default)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"/api/v1/administrators/{parameters.Id}", parameters, _serializer, cancellation);
+        var content = await response.Content.ReadAsStringAsync(cancellation);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = JsonSerializer.Deserialize<Error>(content, _serializer)!;
+
+            await _notificationService.CloseAllMessageBarsAsync();
+            await _notificationService.ShowErrorToastAsync(error.Code, error.Description);
+
+            return error is not null
+                ? Result<AdministratorScheme>.Failure(error)
+                : Result<AdministratorScheme>.Failure(Error.Unknown);
+        }
+
+        var administrator = JsonSerializer.Deserialize<AdministratorScheme>(content, _serializer);
+
+        return administrator is not null
+            ? Result<AdministratorScheme>.Success(administrator)
+            : Result<AdministratorScheme>.Failure(Error.Unknown);
+    }
+
     public async Task<Result<Pagination<AdministratorScheme>>> GetAdministratorsAsync(AdministratorFiltersParameters parameters, CancellationToken cancellation = default)
     {
         var queryString = QueryParametersParser.ToQueryString(parameters);

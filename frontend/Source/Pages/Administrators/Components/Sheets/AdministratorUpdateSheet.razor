@@ -1,0 +1,24 @@
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="20" Style="padding: 24px; width: 100%;">
+    <div style="font-size: 1.1rem; font-weight: 700;">Atualizar administradora</div>
+    <AdministratorUpdateForm Model="_model" OnValidSubmit="SubmitAsync" OnCancel="CancelAsync" />
+</FluentStack>
+
+@code {
+    [CascadingParameter]
+    public IDialogInstance Instance { get; set; } = default!;
+    private UpdateAdministratorScheme _model = new();
+
+    protected override void OnInitialized()
+    {
+        if (Instance.Options.Data is UpdateAdministratorScheme model)
+        {
+            _model = model;
+        }
+    }
+
+    private async Task SubmitAsync() =>
+        await Instance.CloseAsync(DialogResult.Ok(_model));
+
+    private async Task CancelAsync() =>
+        await Instance.CancelAsync();
+}

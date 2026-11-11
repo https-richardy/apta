@@ -7,7 +7,7 @@
         break;
 
     case { CurrentData: { } administrators }:
-        <AdministratorsTable Administrators="administrators.Items" />
+        <AdministratorsTable Administrators="administrators.Items" OnUpdate="OnUpdate" />
         break;
 
     default:
@@ -18,4 +18,7 @@
 @code {
     [Parameter]
     public QueryState<Pagination<AdministratorScheme>> State { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<AdministratorScheme> OnUpdate { get; set; }
 }
