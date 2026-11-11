@@ -54,4 +54,21 @@ public sealed class AdministratorsController(IDispatcher dispatcher) : Controlle
                 StatusCode(StatusCodes.Status409Conflict, result.Error),
         };
     }
+
+    [HttpDelete("{id}")]
+    [Authorize]
+    [EndpointDescription("deletes an administrator identified by its unique identifier")]
+    public async Task<IActionResult> DeleteAdministratorAsync([FromRoute] AdministratorDeletionScheme request, CancellationToken cancellation)
+    {
+        var result = await dispatcher.DispatchAsync(request, cancellation);
+
+        return result switch
+        {
+            { IsSuccess: true } =>
+                StatusCode(StatusCodes.Status204NoContent),
+
+            { IsFailure: true } when result.Error == AdministratorErrors.DoesNotExist =>
+                StatusCode(StatusCodes.Status404NotFound, result.Error),
+        };
+    }
 }

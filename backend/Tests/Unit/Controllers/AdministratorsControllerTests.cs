@@ -71,4 +71,45 @@ public sealed class AdministratorsControllerTests
         Assert.Equal(StatusCodes.Status409Conflict, result.StatusCode);
         Assert.Equal(AdministratorErrors.AlreadyExists, result.Value);
     }
+
+    [Fact(DisplayName = "when delete administrator is called and the deletion succeeds, 204 No Content is returned")]
+    public async Task When_DeleteAdministratorAsync_IsCalled_WithSuccessfulDeletion_Then_NoContentIsReturned()
+    {
+        /* arrange: create the request and the dispatched success result */
+        var request = _fixture.Create<AdministratorDeletionScheme>();
+
+        _dispatcher.Setup(dispatcher => dispatcher.DispatchAsync(It.IsAny<IDispatchable<Result>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Success());
+
+        var controller = new AdministratorsController(_dispatcher.Object);
+
+        /* act: invoke the delete endpoint */
+        var response = await controller.DeleteAdministratorAsync(request, TestContext.Current.CancellationToken);
+
+        /* assert: verify the response is 204 No Content */
+        var result = Assert.IsType<StatusCodeResult>(response);
+
+        Assert.Equal(StatusCodes.Status204NoContent, result.StatusCode);
+    }
+
+    [Fact(DisplayName = "when delete administrator is called and the administrator does not exist, 404 Not Found is returned with the error")]
+    public async Task When_DeleteAdministratorAsync_IsCalled_WithUnknownAdministrator_Then_NotFoundIsReturned()
+    {
+        /* arrange: create the request and the dispatched failure result */
+        var request = _fixture.Create<AdministratorDeletionScheme>();
+
+        _dispatcher.Setup(dispatcher => dispatcher.DispatchAsync(It.IsAny<IDispatchable<Result>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Failure(AdministratorErrors.DoesNotExist));
+
+        var controller = new AdministratorsController(_dispatcher.Object);
+
+        /* act: invoke the delete endpoint */
+        var response = await controller.DeleteAdministratorAsync(request, TestContext.Current.CancellationToken);
+
+        /* assert: verify the response is 404 Not Found carrying the error */
+        var result = Assert.IsType<ObjectResult>(response);
+
+        Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
+        Assert.Equal(AdministratorErrors.DoesNotExist, result.Value);
+    }
 }

@@ -22,4 +22,9 @@ public static class AdministratorsMetadata
     [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(Error), StatusCodes.Status409Conflict)]
     public static void UpdateAdministratorAsync(string id, UpdateAdministratorScheme request, CancellationToken cancellation) { }
+
+    [ApiConventionNameMatch(ApiConventionNameMatchBehavior.Prefix)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
+    public static void DeleteAdministratorAsync(AdministratorDeletionScheme request, CancellationToken cancellation) { }
 }
