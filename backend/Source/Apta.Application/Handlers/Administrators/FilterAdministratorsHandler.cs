@@ -14,6 +14,7 @@ public sealed class FilterAdministratorsHandler(IAdministratorRepository reposit
             .WithCode(parameters.Code)
             .WithPagination(pagination)
             .WithSort(sort)
+            .WithIsDeleted(false)
             .Build();
 
         var administrators = await repository.FilterAdministratorsAsync(filters, cancellation);

@@ -7,6 +7,7 @@ public static class AdministratorFilteringPipeline
         return filters is null ? query : query
             .FilterWhenNotNull(filters.Id, administrator => administrator.Id)
             .FilterWhenNotNull(filters.Name, administrator => administrator.Name)
-            .FilterWhenNotNull(filters.Code, administrator => administrator.Code);
+            .FilterWhenNotNull(filters.Code, administrator => administrator.Code)
+            .FilterWhenNotNull(filters.IsDeleted, administrator => administrator.IsDeleted);
     }
 }
