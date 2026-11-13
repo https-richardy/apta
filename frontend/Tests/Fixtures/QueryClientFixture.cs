@@ -13,7 +13,7 @@ public sealed class QueryClientFixture : IAsyncLifetime
         services.AddDotNetQuery(options =>
         {
             options.ExecutionMode = QueryExecutionMode.Csr;
-            options.StaleTime = TimeSpan.FromMinutes(1);
+            options.StaleTime = TimeSpan.Zero;
             options.CacheTime = TimeSpan.FromMinutes(5);
         });
 
