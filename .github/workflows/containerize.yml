@@ -1,0 +1,69 @@
+name: containerize (reusable)
+
+on:
+  workflow_call:
+    inputs:
+      service-name:
+        description: friendly name shown in the job (e.g. backend, frontend)
+        required: true
+        type: string
+      working-directory:
+        description: docker build context that holds the service Dockerfile (e.g. backend, frontend)
+        required: true
+        type: string
+      image:
+        description: docker hub repository for the published image (e.g. httpsrichardy/apta-backend)
+        required: true
+        type: string
+    secrets:
+      docker-username:
+        description: docker hub account used to authenticate the push
+        required: true
+      docker-token:
+        description: docker hub access token used to authenticate the push
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-push:
+    name: build & push (${{ inputs.service-name }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: install gitversion
+        uses: gittools/actions/gitversion/setup@v4.7.0
+        with:
+          versionSpec: '6.8.2'
+
+      - name: determine version
+        id: version
+        uses: gittools/actions/gitversion/execute@v4.7.0
+        with:
+          useConfigFile: true
+          configFilePath: GitVersion.yml
+
+      - name: set up buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: login to docker hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.docker-username }}
+          password: ${{ secrets.docker-token }}
+
+      - name: build & push
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ inputs.working-directory }}
+          file: ${{ inputs.working-directory }}/Dockerfile
+          push: true
+          tags: |
+            ${{ inputs.image }}:${{ steps.version.outputs.semVer }}
+            ${{ inputs.image }}:latest

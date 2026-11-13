@@ -1,0 +1,83 @@
+name: publish
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  changes:
+    name: detect changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5
+
+      - name: detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            backend:
+              - 'backend/Source/**'
+              - 'backend/Dockerfile'
+              - 'backend/.dockerignore'
+            frontend:
+              - 'frontend/Source/**'
+              - 'frontend/Dockerfile'
+              - 'frontend/.dockerignore'
+              - 'frontend/nginx.conf'
+
+  quality-assurance-backend:
+    name: backend
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    uses: ./.github/workflows/quality-assurance.yml
+    with:
+      project-name: backend
+      working-directory: backend
+
+  quality-assurance-frontend:
+    name: frontend
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    uses: ./.github/workflows/quality-assurance.yml
+    with:
+      project-name: frontend
+      working-directory: frontend
+
+  containerize-backend:
+    name: backend
+    needs: [ changes, quality-assurance-backend ]
+    if: needs.changes.outputs.backend == 'true'
+    uses: ./.github/workflows/containerize.yml
+    with:
+      service-name: backend
+      working-directory: backend
+      image: httpsrichardy/apta-backend
+    secrets:
+      docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker-token: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  containerize-frontend:
+    name: frontend
+    needs: [ changes, quality-assurance-frontend ]
+    if: needs.changes.outputs.frontend == 'true'
+    uses: ./.github/workflows/containerize.yml
+    with:
+      service-name: frontend
+      working-directory: frontend
+      image: httpsrichardy/apta-frontend
+    secrets:
+      docker-username: ${{ secrets.DOCKERHUB_USERNAME }}
+      docker-token: ${{ secrets.DOCKERHUB_TOKEN }}
