@@ -17,8 +17,7 @@ O que você precisa ter instalado para começar:
 | **Docker Desktop** | rodar a infra local (MongoDB, Keycloak, Seq) | https://www.docker.com/products/docker-desktop/ |
 | **.NET 10 SDK** | compilar e rodar o backend | https://dotnet.microsoft.com/download/dotnet/10.0 |
 | **DBeaver Community** *(opcional)* | GUI de banco de dados para navegar e gerenciar o PostgreSQL | https://dbeaver.io/ |
-| **Um editor** | escrever código | VS Code · https://code.visualstudio.com/ |
-| | ou | Visual Studio · https://visualstudio.microsoft.com/vs/community/ |
+| **IDE** | escrever, depurar e executar a codebase | VS Code · https://code.visualstudio.com/ ou Visual Studio · https://visualstudio.microsoft.com/ |
 
 > **Recomendado:** **Visual Studio Community Edition** (gratuito) para a
 > experiência completa de .NET. O VS Code funciona bem com a extensão de C#.
