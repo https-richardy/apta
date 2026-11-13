@@ -128,6 +128,164 @@ public sealed class AdministratorsControllerTests(ApplicationFixture factory) :
         });
     }
 
+    [Fact(DisplayName = "[e2e] - when PUT /api/v1/administrators/{id} is called with an existing administrator, 200 is returned")]
+    public async Task When_UpdateAdministrator_IsCalled_WithExistingAdministrator_Then_200OkIsReturned()
+    {
+        /* arrange: persist an administrator to be updated */
+        var httpClient = factory.HttpClient;
+        var administrator = _fixture.Build<Administrator>()
+            .With(entity => entity.Code, "58113812")
+            .With(entity => entity.CreatedAt, DateTime.UtcNow)
+            .With(entity => entity.UpdatedAt, DateTime.UtcNow)
+            .With(entity => entity.IsDeleted, false)
+            .Create();
+
+        await factory.Context.Administrators.AddAsync(administrator, TestContext.Current.CancellationToken);
+        await factory.Context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        /* arrange: create a request with new trade name and code */
+        var request = _fixture.Build<UpdateAdministratorScheme>()
+            .With(scheme => scheme.Name, "EMBRACON ADMINISTRADORA")
+            .With(scheme => scheme.Code, "11122233")
+            .Create();
+
+        /* act: send PUT request to the administrators endpoint */
+        var response = await httpClient.PutAsJsonAsync($"/api/v1/administrators/{administrator.Id}", request, TestContext.Current.CancellationToken);
+        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        /* assert: verify http response status and content */
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.False(string.IsNullOrWhiteSpace(content));
+
+        /* assert: deserialize response */
+        var result = JsonSerializer.Deserialize<AdministratorScheme>(content, _serializer);
+
+        /* assert: validate the updated administrator */
+        Assert.NotNull(result);
+
+        Assert.Equal(administrator.Id, result.Id);
+        Assert.Equal(request.Name, result.Name);
+        Assert.Equal(request.Code, result.Code);
+    }
+
+    [Fact(DisplayName = "[e2e] - when PUT /api/v1/administrators/{id} is called with a non-existent administrator, 404 is returned")]
+    public async Task When_UpdateAdministrator_IsCalled_WithNonExistentAdministrator_Then_404NotFoundIsReturned()
+    {
+        /* arrange: create a request targeting an administrator that does not exist */
+        var httpClient = factory.HttpClient;
+        var request = _fixture.Build<UpdateAdministratorScheme>()
+            .With(scheme => scheme.Name, "EMBRACON")
+            .With(scheme => scheme.Code, "58113812")
+            .Create();
+
+        /* act: send PUT request to the administrators endpoint */
+        var response = await httpClient.PutAsJsonAsync("/api/v1/administrators/administrator_d3TjZUiCvu22Uf2LkapbNWjKa", request, TestContext.Current.CancellationToken);
+        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        /* assert: verify http response status and content */
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.False(string.IsNullOrWhiteSpace(content));
+
+        /* assert: deserialize response */
+        var result = JsonSerializer.Deserialize<Error>(content, _serializer);
+
+        /* assert: validate returned error */
+        Assert.NotNull(result);
+        Assert.Equal(AdministratorErrors.DoesNotExist, result);
+    }
+
+    [Fact(DisplayName = "[e2e] - when PUT /api/v1/administrators/{id} is called with a code taken by another administrator, 409 is returned")]
+    public async Task When_UpdateAdministrator_IsCalled_WithCodeTakenByAnotherAdministrator_Then_409ConflictIsReturned()
+    {
+        /* arrange: persist two administrators with distinct codes */
+        var httpClient = factory.HttpClient;
+        var administrators = _fixture.Build<Administrator>()
+            .With(entity => entity.CreatedAt, DateTime.UtcNow)
+            .With(entity => entity.UpdatedAt, DateTime.UtcNow)
+            .With(entity => entity.IsDeleted, false)
+            .CreateMany(2)
+            .ToList();
+
+        administrators[0].Code = "58113812";
+        administrators[1].Code = "11122233";
+
+        await factory.Context.Administrators.AddRangeAsync(administrators, TestContext.Current.CancellationToken);
+        await factory.Context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        /* arrange: update the first administrator with the code already taken by the second */
+        var request = _fixture.Build<UpdateAdministratorScheme>()
+            .With(scheme => scheme.Name, "EMBRACON")
+            .With(scheme => scheme.Code, "11122233")
+            .Create();
+
+        /* act: send PUT request to the administrators endpoint */
+        var response = await httpClient.PutAsJsonAsync($"/api/v1/administrators/{administrators[0].Id}", request, TestContext.Current.CancellationToken);
+        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        /* assert: verify http response status and content */
+        Assert.Equal(HttpStatusCode.Conflict, response.StatusCode);
+        Assert.False(string.IsNullOrWhiteSpace(content));
+
+        /* assert: deserialize response */
+        var result = JsonSerializer.Deserialize<Error>(content, _serializer);
+
+        /* assert: validate returned error */
+        Assert.NotNull(result);
+        Assert.Equal(AdministratorErrors.AlreadyExists, result);
+    }
+
+    [Fact(DisplayName = "[e2e] - when DELETE /api/v1/administrators/{id} is called with an existing administrator, 204 is returned")]
+    public async Task When_DeleteAdministrator_IsCalled_WithExistingAdministrator_Then_204NoContentIsReturned()
+    {
+        /* arrange: persist an administrator to be deleted */
+        var httpClient = factory.HttpClient;
+        var administrator = _fixture.Build<Administrator>()
+            .With(entity => entity.Code, "58113812")
+            .With(entity => entity.CreatedAt, DateTime.UtcNow)
+            .With(entity => entity.UpdatedAt, DateTime.UtcNow)
+            .With(entity => entity.IsDeleted, false)
+            .Create();
+
+        await factory.Context.Administrators.AddAsync(administrator, TestContext.Current.CancellationToken);
+        await factory.Context.SaveChangesAsync(TestContext.Current.CancellationToken);
+
+        /* act: send DELETE request to the administrators endpoint */
+        var response = await httpClient.DeleteAsync($"/api/v1/administrators/{administrator.Id}", TestContext.Current.CancellationToken);
+
+        /* assert: verify http response status */
+        Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+
+        /* assert: verify the administrator was soft deleted */
+        var persisted = await factory.Context.Administrators.AsNoTracking()
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(entity => entity.Id == administrator.Id, TestContext.Current.CancellationToken);
+
+        Assert.NotNull(persisted);
+        Assert.True(persisted.IsDeleted);
+    }
+
+    [Fact(DisplayName = "[e2e] - when DELETE /api/v1/administrators/{id} is called with a non-existent administrator, 404 is returned")]
+    public async Task When_DeleteAdministrator_IsCalled_WithNonExistentAdministrator_Then_404NotFoundIsReturned()
+    {
+        /* arrange: resolves http client instance from integration environment */
+        var httpClient = factory.HttpClient;
+
+        /* act: send DELETE request targeting an administrator that does not exist */
+        var response = await httpClient.DeleteAsync("/api/v1/administrators/administrator_d3TjZUiCvu22Uf2LkapbNWjKa", TestContext.Current.CancellationToken);
+        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        /* assert: verify http response status and content */
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.False(string.IsNullOrWhiteSpace(content));
+
+        /* assert: deserialize response */
+        var result = JsonSerializer.Deserialize<Error>(content, _serializer);
+
+        /* assert: validate returned error */
+        Assert.NotNull(result);
+        Assert.Equal(AdministratorErrors.DoesNotExist, result);
+    }
+
     public async ValueTask DisposeAsync() => await ValueTask.FromResult(ValueTask.CompletedTask);
     public async ValueTask InitializeAsync() => await factory.CleanDatabaseAsync();
 }
