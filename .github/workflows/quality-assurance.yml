@@ -1,40 +1,33 @@
-name: pull request quality assurance
+name: quality assurance (reusable)
 
 on:
-  pull_request:
-    branches: [ main ]
+  workflow_call:
+    inputs:
+      project-name:
+        description: friendly name shown in the job and coverage artifact (e.g. backend, webui)
+        required: true
+        type: string
+      working-directory:
+        description: solution root to restore, build and test (e.g. backend, frontend)
+        required: true
+        type: string
+      configuration:
+        description: dotnet build and test configuration
+        required: false
+        type: string
+        default: Debug
 
 permissions:
   contents: read
-  pull-requests: write
-
-concurrency:
-  group: qa-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
-  secret-scan:
-    name: secret scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    steps:
-      - name: checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: gitleaks
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   build-test:
-    name: build & test
+    name: build & test (${{ inputs.project-name }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
     defaults:
       run:
-        working-directory: backend
+        working-directory: ${{ inputs.working-directory }}
     steps:
       - name: checkout
         uses: actions/checkout@v5
@@ -42,17 +35,17 @@ jobs:
       - name: setup dotnet
         uses: actions/setup-dotnet@v4
         with:
-          global-json-file: backend/global.json
+          global-json-file: ${{ inputs.working-directory }}/global.json
 
       - name: restore
         run: dotnet restore
 
       - name: build
-        run: dotnet build --no-restore --configuration Debug
+        run: dotnet build --no-restore --configuration ${{ inputs.configuration }}
 
       - name: test
         run: >
-          dotnet test --no-build --configuration Debug
+          dotnet test --no-build --configuration ${{ inputs.configuration }}
           --coverage
           --coverage-output-format cobertura
           --coverage-output coverage.cobertura.xml
@@ -60,8 +53,8 @@ jobs:
       - name: coverage summary
         if: ${{ !cancelled() }}
         run: |
-          dotnet tool restore
-          dotnet tool run reportgenerator \
+          dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.5.11
+          reportgenerator \
             -reports:**/*.cobertura.xml \
             -targetdir:coverage-report \
             -reporttypes:MarkdownSummaryGithub
@@ -71,8 +64,8 @@ jobs:
         if: ${{ !cancelled() }}
         uses: actions/upload-artifact@v4
         with:
-          name: coverage
+          name: coverage-${{ inputs.project-name }}
           path: |
-            backend/**/TestResults/coverage.cobertura.xml
-            backend/coverage-report/**
+            ${{ inputs.working-directory }}/**/TestResults/coverage.cobertura.xml
+            ${{ inputs.working-directory }}/coverage-report/**
           if-no-files-found: error

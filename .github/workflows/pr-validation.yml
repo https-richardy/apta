@@ -1,0 +1,72 @@
+name: pull request validation
+
+on:
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+concurrency:
+  group: pr-validation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secret-scan:
+    name: secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  changes:
+    name: detect changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5
+
+      - name: detect changed paths
+        id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+              - '.github/workflows/quality-assurance.yml'
+              - '.github/workflows/pr-validation.yml'
+            frontend:
+              - 'frontend/**'
+              - '.github/workflows/quality-assurance.yml'
+              - '.github/workflows/pr-validation.yml'
+
+  quality-assurance-backend:
+    name: backend
+    needs: changes
+    if: needs.changes.outputs.backend == 'true'
+    uses: ./.github/workflows/quality-assurance.yml
+    with:
+      project-name: backend
+      working-directory: backend
+
+  quality-assurance-frontend:
+    name: frontend
+    needs: changes
+    if: needs.changes.outputs.frontend == 'true'
+    uses: ./.github/workflows/quality-assurance.yml
+    with:
+      project-name: frontend
+      working-directory: frontend
