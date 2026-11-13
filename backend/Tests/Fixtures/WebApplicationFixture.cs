@@ -28,6 +28,20 @@ public sealed class WebApplicationFixture(PostgresDatabase database) : IAsyncLif
                     services.Remove(descriptor);
 
                 services.AddDbContext<DatabaseContext>(options => options.UseNpgsql(database.ConnectionString));
+
+                /* replaces bearer authentication with a scheme that authenticates every request */
+                var builder = services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = AppDomain.CurrentDomain.FriendlyName;
+                    options.DefaultChallengeScheme = AppDomain.CurrentDomain.FriendlyName;
+                    options.DefaultScheme = AppDomain.CurrentDomain.FriendlyName;
+                });
+
+                builder.AddScheme<AuthenticationSchemeOptions, AuthenticationHandlerFixture>(AppDomain.CurrentDomain.FriendlyName, _ => { });
+                services.AddAuthorizationBuilder()
+                    .SetDefaultPolicy(new AuthorizationPolicyBuilder(AppDomain.CurrentDomain.FriendlyName)
+                    .RequireAuthenticatedUser()
+                    .Build());
             });
         });
 

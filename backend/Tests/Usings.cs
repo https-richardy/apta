@@ -1,15 +1,26 @@
+global using System.Net;
+global using System.Net.Http.Json;
+global using System.Text.Json;
+global using System.Text.Encodings.Web;
+global using System.Security.Claims;
+
 global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
 global using Microsoft.Extensions.Logging.Abstractions;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.Extensions.Options;
 
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.Testing;
 global using Microsoft.AspNetCore.Hosting;
 global using Microsoft.AspNetCore.TestHost;
 global using Microsoft.AspNetCore.Http;
+global using Microsoft.AspNetCore.Authentication;
+global using Microsoft.AspNetCore.Authorization;
 
 global using Apta.Application.Handlers.Administrators;
 global using Apta.Application.Mapping;
+global using Apta.Application.Transport;
 global using Apta.Application.Transport.Administrators;
 global using Apta.Application.Validators.Administrators;
 
