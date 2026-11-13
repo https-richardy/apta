@@ -19,8 +19,6 @@ public static class MonitoringExtension
             options.Environment = builder.Environment.EnvironmentName;
             options.TracesSampleRate = 1.0;
             options.EnableLogs = true;
-            options.Debug = true;
-
             options.UseSerilog();
         });
     }
