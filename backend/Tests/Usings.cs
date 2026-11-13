@@ -1,7 +1,11 @@
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Logging.Abstractions;
+global using Microsoft.Extensions.DependencyInjection;
 
 global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.Mvc.Testing;
+global using Microsoft.AspNetCore.Hosting;
+global using Microsoft.AspNetCore.TestHost;
 global using Microsoft.AspNetCore.Http;
 
 global using Apta.Application.Handlers.Administrators;
@@ -17,6 +21,7 @@ global using Apta.Domain.Repositories;
 global using Apta.Infrastructure.Persistence;
 global using Apta.Infrastructure.Persistence.Repositories;
 
+global using Apta.WebApi;
 global using Apta.WebApi.Controllers;
 global using Apta.Tests.Collections;
 global using Apta.Tests.Fixtures;
