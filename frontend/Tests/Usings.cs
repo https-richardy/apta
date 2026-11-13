@@ -15,12 +15,15 @@ global using Apta.WebUI.Pages.Administrators.Components.Forms;
 global using Apta.WebUI.Pages.Administrators.Components.Tables;
 global using Apta.WebUI.Clients.Interfaces;
 global using Apta.WebUI.Services;
+global using Apta.WebUI.Authentication;
 
 global using Bunit;
+global using Bunit.TestDoubles;
 global using AutoFixture;
 global using Moq;
 global using HttpsRichardy.Internal.Essentials.Patterns;
 
+global using Blazored.LocalStorage;
 global using DotNetQuery.Core;
 global using DotNetQuery.Extensions.DependencyInjection;
 
