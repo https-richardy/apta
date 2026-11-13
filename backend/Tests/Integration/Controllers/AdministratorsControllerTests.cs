@@ -256,12 +256,16 @@ public sealed class AdministratorsControllerTests(ApplicationFixture factory) :
         Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
 
         /* assert: verify the administrator was soft deleted */
-        var persisted = await factory.Context.Administrators.AsNoTracking()
-            .IgnoreQueryFilters()
-            .FirstOrDefaultAsync(entity => entity.Id == administrator.Id, TestContext.Current.CancellationToken);
+        var repository = factory.Services.GetRequiredService<IAdministratorRepository>();
+        var filters = AdministratorFilters.AsBuilder()
+            .WithIdentifier(administrator.Id)
+            .Build();
 
-        Assert.NotNull(persisted);
-        Assert.True(persisted.IsDeleted);
+        var administrators = await repository.FilterAdministratorsAsync(filters, TestContext.Current.CancellationToken);
+        var deletedAdministrator = administrators.FirstOrDefault();
+
+        Assert.NotNull(deletedAdministrator);
+        Assert.True(deletedAdministrator.IsDeleted);
     }
 
     [Fact(DisplayName = "[e2e] - when DELETE /api/v1/administrators/{id} is called with a non-existent administrator, 404 is returned")]
