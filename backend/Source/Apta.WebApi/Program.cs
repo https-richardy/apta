@@ -1,3 +1,5 @@
+/* chore: this is a no-op comment to force the pr-validation pipeline to run */
+
 namespace Apta.WebApi;
 
 public partial class Program
