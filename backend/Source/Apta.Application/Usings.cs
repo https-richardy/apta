@@ -8,11 +8,14 @@ global using Apta.Domain.Repositories;
 
 global using Apta.Application.Transport;
 global using Apta.Application.Transport.Administrators;
+global using Apta.Application.Transport.Customers;
 
 global using Dispattchr.Contracts;
 global using FluentValidation;
 
 global using HttpsRichardy.Mapping;
 global using HttpsRichardy.Internal.Essentials.Contracts;
+global using HttpsRichardy.Internal.Essentials.Extensions;
 global using HttpsRichardy.Internal.Essentials.Filtering;
 global using HttpsRichardy.Internal.Essentials.Patterns;
+global using HttpsRichardy.Internal.Essentials.Utilities;
