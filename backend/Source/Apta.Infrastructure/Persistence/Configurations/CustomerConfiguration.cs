@@ -14,11 +14,15 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasMaxLength(200);
 
         builder.Property(customer => customer.Phone)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(20);
 
+        builder.Property(customer => customer.Email)
+            .IsRequired(false)
+            .HasMaxLength(256);
+
         builder.Property(customer => customer.Document)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(14);
 
         builder.Property(customer => customer.CreatedAt)
@@ -34,6 +38,9 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         /* in this section, configure the entity's indexes */
         /* https://learn.microsoft.com/pt-br/ef/core/modeling/indexes */
         builder.HasIndex(customer => customer.Document)
+            .IsUnique();
+
+        builder.HasIndex(customer => customer.Email)
             .IsUnique();
 
         builder.HasIndex(customer => customer.Name);
