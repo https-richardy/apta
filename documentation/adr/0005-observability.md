@@ -23,6 +23,13 @@ Usar **Seq** como destino de **logs estruturados** do backend .NET e **Sentry** 
 ### Neutras
 - Métricas e tracing (ex.: OpenTelemetry) podem complementar no futuro, sem conflito com esta decisão.
 
+## Implementação
+O backend já integra as duas frentes definidas nesta decisão:
+- **Logs estruturados** via Serilog, com saída para console e para o **Seq**.
+- **Monitoramento de erros e performance** via **Sentry** (integração ASP.NET Core), com captura automática de exceções e identificação do ambiente de origem; os eventos de log do Serilog também são encaminhados ao Sentry.
+
+As integrações são configuradas por ambiente (DSN do Sentry e URL do coletor do Seq, mantidos fora do versionamento) e ficam ativas apenas em desenvolvimento e produção, desligadas durante os testes para não impactar a suíte.
+
 ## Alternativas Consideradas
 - **Stack ELK**: mais pesada do que o necessário para a escala atual.
 - **Apenas logs em arquivo**: insuficiente para a evolução distribuída.
