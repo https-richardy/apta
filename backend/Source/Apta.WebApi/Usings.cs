@@ -32,3 +32,6 @@ global using Flurl;
 global using Scalar.AspNetCore;
 global using Dispattchr.Contracts;
 global using HttpsRichardy.Internal.Essentials.Patterns;
+
+global using Serilog;
+global using Sentry.Serilog;
