@@ -22,7 +22,9 @@ global using Apta.Application.Handlers.Administrators;
 global using Apta.Application.Mapping;
 global using Apta.Application.Transport;
 global using Apta.Application.Transport.Administrators;
+global using Apta.Application.Transport.Customers;
 global using Apta.Application.Validators.Administrators;
+global using Apta.Application.Validators.Customers;
 
 global using Apta.Domain.Aggregates;
 global using Apta.Domain.Errors;

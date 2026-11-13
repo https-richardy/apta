@@ -28,11 +28,11 @@ public sealed class CustomerMapping : Profile
             .ForMember(destination => destination.Name,
                 options => options.MapFrom(source => source.Name))
             .ForMember(destination => destination.Phone,
-                options => options.MapFrom(source => source.Phone.OrNotSpecified()))
+                options => options.MapFrom(source => (source.Phone ?? string.Empty).OrNotSpecified()))
             .ForMember(destination => destination.Email,
-                options => options.MapFrom(source => source.Email.OrNotSpecified()))
+                options => options.MapFrom(source => (source.Email ?? string.Empty).OrNotSpecified()))
             .ForMember(destination => destination.Document,
-                options => options.MapFrom(source => source.Document.OrNotSpecified()))
+                options => options.MapFrom(source => (source.Document ?? string.Empty).OrNotSpecified()))
             .ForMember(destination => destination.CreatedAt,
                 options => options.MapFrom(source => source.CreatedAt))
             .ForMember(destination => destination.UpdatedAt,
