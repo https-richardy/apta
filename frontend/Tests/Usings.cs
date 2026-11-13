@@ -13,9 +13,13 @@ global using Apta.WebUI.Pages.Authentication.Components;
 global using Apta.WebUI.Pages.Administrators.Components.Content;
 global using Apta.WebUI.Pages.Administrators.Components.Forms;
 global using Apta.WebUI.Pages.Administrators.Components.Tables;
+global using Apta.WebUI.Clients.Interfaces;
+global using Apta.WebUI.Services;
 
 global using Bunit;
 global using AutoFixture;
+global using Moq;
+global using HttpsRichardy.Internal.Essentials.Patterns;
 
 global using DotNetQuery.Core;
 global using DotNetQuery.Extensions.DependencyInjection;
