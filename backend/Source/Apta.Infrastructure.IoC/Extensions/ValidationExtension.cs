@@ -11,5 +11,6 @@ internal static class ValidationExtension
 
         services.AddScoped<IValidator<CustomerCreationScheme>, CustomerCreationSchemeValidator>();
         services.AddScoped<IValidator<CustomerFiltersParameters>, CustomerFiltersParametersValidator>();
+        services.AddScoped<IValidator<UpdateCustomerScheme>, UpdateCustomerSchemeValidator>();
     }
 }
