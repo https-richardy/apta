@@ -9,8 +9,6 @@ public sealed class CustomerMapping : Profile
                 options => options.MapFrom(source => source.Name.Trim()))
             .ForMember(destination => destination.Phone,
                 options => options.MapFrom(source => (source.Phone ?? string.Empty).SanitizeNumbers().OrNotSpecified()))
-            .ForMember(destination => destination.Email,
-                options => options.MapFrom(source => string.IsNullOrWhiteSpace(source.Email) ? null : source.Email.Trim()))
             .ForMember(destination => destination.Document,
                 options => options.MapFrom(source => string.IsNullOrWhiteSpace(source.Document) ? null : source.Document.SanitizeNumbers()))
             .ForMember(destination => destination.Id,
@@ -29,8 +27,6 @@ public sealed class CustomerMapping : Profile
                 options => options.MapFrom(source => source.Name))
             .ForMember(destination => destination.Phone,
                 options => options.MapFrom(source => (source.Phone ?? string.Empty).OrNotSpecified()))
-            .ForMember(destination => destination.Email,
-                options => options.MapFrom(source => (source.Email ?? string.Empty).OrNotSpecified()))
             .ForMember(destination => destination.Document,
                 options => options.MapFrom(source => (source.Document ?? string.Empty).OrNotSpecified()))
             .ForMember(destination => destination.CreatedAt,

@@ -13,7 +13,6 @@ public sealed class CustomerFiltersParametersValidatorTests
             .With(filters => filters.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(filters => filters.Name, "João")
             .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, "joao.silva@gmail.com")
             .With(filters => filters.Document, "12345678909")
             .With(filters => filters.By, "Name")
             .With(filters => filters.Order, "Ascending")
@@ -37,7 +36,6 @@ public sealed class CustomerFiltersParametersValidatorTests
             .With(filters => filters.Id, "invalid-identifier")
             .With(filters => filters.Name, "João")
             .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, "joao.silva@gmail.com")
             .With(filters => filters.Document, "12345678909")
             .With(filters => filters.By, "Name")
             .With(filters => filters.Order, "Ascending")
@@ -61,7 +59,6 @@ public sealed class CustomerFiltersParametersValidatorTests
             .With(filters => filters.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(filters => filters.Name, new string('A', 201))
             .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, "joao.silva@gmail.com")
             .With(filters => filters.Document, "12345678909")
             .With(filters => filters.By, "Name")
             .With(filters => filters.Order, "Ascending")
@@ -77,30 +74,6 @@ public sealed class CustomerFiltersParametersValidatorTests
         Assert.Contains(result.Errors, error => error.PropertyName == nameof(CustomerFiltersParameters.Name));
     }
 
-    [Fact(DisplayName = "when email exceeds maximum length, email validation error is returned")]
-    public void When_Validate_IsCalled_WithEmailLongerThan256Characters_Then_EmailValidationErrorIsReturned()
-    {
-        /* arrange: create filter parameters with an email exceeding the maximum length */
-        var parameters = _fixture.Build<CustomerFiltersParameters>()
-            .With(filters => filters.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
-            .With(filters => filters.Name, "João")
-            .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, new string('a', 257))
-            .With(filters => filters.Document, "12345678909")
-            .With(filters => filters.By, "Name")
-            .With(filters => filters.Order, "Ascending")
-            .With(filters => filters.Page, 1)
-            .With(filters => filters.PageSize, 10)
-            .Create();
-
-        /* act: validate filter parameters */
-        var result = _validator.Validate(parameters);
-
-        /* assert: verify email validation error */
-        Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, error => error.PropertyName == nameof(CustomerFiltersParameters.Email));
-    }
-
     [Fact(DisplayName = "when document exceeds maximum length, document validation error is returned")]
     public void When_Validate_IsCalled_WithDocumentLongerThan14Characters_Then_DocumentValidationErrorIsReturned()
     {
@@ -109,7 +82,6 @@ public sealed class CustomerFiltersParametersValidatorTests
             .With(filters => filters.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(filters => filters.Name, "João")
             .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, "joao.silva@gmail.com")
             .With(filters => filters.Document, new string('1', 15))
             .With(filters => filters.By, "Name")
             .With(filters => filters.Order, "Ascending")
@@ -133,7 +105,6 @@ public sealed class CustomerFiltersParametersValidatorTests
             .With(filters => filters.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(filters => filters.Name, "João")
             .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, "joao.silva@gmail.com")
             .With(filters => filters.Document, "12345678909")
             .With(filters => filters.By, "Name")
             .With(filters => filters.Order, "Sideways")
@@ -157,7 +128,6 @@ public sealed class CustomerFiltersParametersValidatorTests
             .With(filters => filters.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(filters => filters.Name, "João")
             .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, "joao.silva@gmail.com")
             .With(filters => filters.Document, "12345678909")
             .With(filters => filters.By, "Name")
             .With(filters => filters.Order, "Ascending")
@@ -181,7 +151,6 @@ public sealed class CustomerFiltersParametersValidatorTests
             .With(filters => filters.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(filters => filters.Name, "João")
             .With(filters => filters.Phone, "11988887777")
-            .With(filters => filters.Email, "joao.silva@gmail.com")
             .With(filters => filters.Document, "12345678909")
             .With(filters => filters.By, "Name")
             .With(filters => filters.Order, "Ascending")

@@ -19,14 +19,6 @@ public sealed class CustomerFiltersBuilder :
         return this;
     }
 
-    public CustomerFiltersBuilder WithEmail(string? email)
-    {
-        if (!string.IsNullOrWhiteSpace(email))
-            _filters.Email = email.Trim();
-
-        return this;
-    }
-
     public CustomerFiltersBuilder WithDocument(string? document)
     {
         var digits = new string([.. (document ?? string.Empty).Where(char.IsDigit)]);

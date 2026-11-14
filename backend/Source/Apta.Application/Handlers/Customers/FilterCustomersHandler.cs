@@ -12,7 +12,6 @@ public sealed class FilterCustomersHandler(ICustomerRepository repository, IMapp
             .WithIdentifier(parameters.Id)
             .WithName(parameters.Name)
             .WithPhone(parameters.Phone)
-            .WithEmail(parameters.Email)
             .WithDocument(parameters.Document)
             .WithPagination(pagination)
             .WithSort(sort)

@@ -22,11 +22,6 @@ public sealed class CustomerFiltersParametersValidator : AbstractValidator<Custo
             .When(parameters => !string.IsNullOrWhiteSpace(parameters.Phone))
             .WithMessage("phone must be at most 20 characters long.");
 
-        RuleFor(parameters => parameters.Email)
-            .MaximumLength(256)
-            .When(parameters => !string.IsNullOrWhiteSpace(parameters.Email))
-            .WithMessage("email must be at most 256 characters long.");
-
         RuleFor(parameters => parameters.Document)
             .MaximumLength(14)
             .When(parameters => !string.IsNullOrWhiteSpace(parameters.Document))

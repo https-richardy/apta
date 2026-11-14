@@ -15,14 +15,6 @@ public sealed class CustomerCreationSchemeValidator : AbstractValidator<Customer
             .When(customer => !string.IsNullOrWhiteSpace(customer.Phone))
             .WithMessage("phone must be a valid brazilian phone number.");
 
-        RuleFor(customer => customer.Email)
-            .Matches(ExpressionPatterns.Email)
-            .When(customer => !string.IsNullOrWhiteSpace(customer.Email))
-            .WithMessage("email must be a valid email address.")
-            .MaximumLength(256)
-            .When(customer => !string.IsNullOrWhiteSpace(customer.Email))
-            .WithMessage("email must be at most 256 characters long.");
-
         RuleFor(customer => customer.Document)
             .Matches(ExpressionPatterns.Cpf)
             .When(customer => !string.IsNullOrWhiteSpace(customer.Document))

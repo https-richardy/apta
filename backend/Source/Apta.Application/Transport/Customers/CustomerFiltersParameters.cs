@@ -11,9 +11,6 @@ public sealed record CustomerFiltersParameters : IDispatchable<Result<Pagination
     [Description("the partial or full phone number of the customer, for example, '11988887777'")]
     public string? Phone { get; init; }
 
-    [Description("the partial or full email address of the customer, for example, 'joao.silva@gmail.com'")]
-    public string? Email { get; init; }
-
     [Description("the partial or full CPF (brazilian individual registry document) of the customer, for example, '12345678909'")]
     public string? Document { get; init; }
 

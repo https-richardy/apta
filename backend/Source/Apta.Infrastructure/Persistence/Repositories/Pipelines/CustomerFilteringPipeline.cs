@@ -7,7 +7,6 @@ public static class CustomerFilteringPipeline
         return filters is null ? query : query
             .FilterWhenNotNull(filters.Name, customer => customer.Name)
             .FilterWhenNotNull(filters.Phone, customer => customer.Phone)
-            .FilterWhenNotNull(filters.Email, customer => customer.Email)
             .FilterWhenNotNull(filters.Document, customer => customer.Document)
             .FilterWhenNotNull(filters.IsDeleted, customer => customer.IsDeleted);
     }

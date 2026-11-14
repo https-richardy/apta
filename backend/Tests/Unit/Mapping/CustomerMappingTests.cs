@@ -35,30 +35,27 @@ public sealed class CustomerMappingTests
         var scheme = _fixture.Build<CustomerCreationScheme>()
             .With(customer => customer.Name, "  João da Silva  ")
             .With(customer => customer.Phone, "(11) 98888-7777")
-            .With(customer => customer.Email, "joao.silva@gmail.com")
             .With(customer => customer.Document, "123.456.789-09")
             .Create();
 
         /* act: map customer creation scheme into customer entity */
         var customer = _mapper.Map<Customer>(scheme);
 
-        /* assert: verify name and email are normalized */
+        /* assert: verify name is normalized */
         Assert.Equal("João da Silva", customer.Name);
-        Assert.Equal("joao.silva@gmail.com", customer.Email);
 
         /* assert: verify phone and document keep digits only */
         Assert.Equal("11988887777", customer.Phone);
         Assert.Equal("12345678909", customer.Document);
     }
 
-    [Fact(DisplayName = "when customer creation scheme omits contact data, phone falls back and unique fields stay null")]
-    public void When_Map_IsCalled_WithoutContactData_Then_PhoneFallsBackAndUniqueFieldsStayNull()
+    [Fact(DisplayName = "when customer creation scheme omits contact data, phone falls back and the document stays null")]
+    public void When_Map_IsCalled_WithoutContactData_Then_PhoneFallsBackAndDocumentStaysNull()
     {
         /* arrange: create customer creation scheme with the optional contact data omitted */
         var scheme = _fixture.Build<CustomerCreationScheme>()
             .With(customer => customer.Name, "João da Silva")
             .Without(customer => customer.Phone)
-            .Without(customer => customer.Email)
             .Without(customer => customer.Document)
             .Create();
 
@@ -69,8 +66,7 @@ public sealed class CustomerMappingTests
         Assert.Equal("João da Silva", customer.Name);
         Assert.Equal("NÃO ESPECIFICADO", customer.Phone);
 
-        /* assert: verify the unique fields stay null to preserve uniqueness */
-        Assert.Null(customer.Email);
+        /* assert: verify the document stays null to preserve uniqueness */
         Assert.Null(customer.Document);
     }
 
@@ -82,7 +78,6 @@ public sealed class CustomerMappingTests
             .With(entity => entity.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(entity => entity.Name, "João da Silva")
             .With(entity => entity.Phone, "11988887777")
-            .With(entity => entity.Email, "joao.silva@gmail.com")
             .With(entity => entity.Document, "12345678909")
             .With(entity => entity.CreatedAt, DateTime.UtcNow.AddDays(-1))
             .With(entity => entity.UpdatedAt, DateTime.UtcNow)
@@ -91,13 +86,12 @@ public sealed class CustomerMappingTests
         /* act: map customer entity into customer scheme */
         var scheme = _mapper.Map<CustomerScheme>(customer);
 
-        /* assert: verify identity and contact fields */
+        /* assert: verify identity and name */
         Assert.Equal(customer.Id, scheme.Id);
         Assert.Equal(customer.Name, scheme.Name);
 
         /* assert: verify contact and document fields */
         Assert.Equal(customer.Phone, scheme.Phone);
-        Assert.Equal(customer.Email, scheme.Email);
         Assert.Equal(customer.Document, scheme.Document);
 
         /* assert: verify audit fields */
@@ -105,26 +99,24 @@ public sealed class CustomerMappingTests
         Assert.Equal(customer.UpdatedAt, scheme.UpdatedAt);
     }
 
-    [Fact(DisplayName = "when customer has no email or document, the scheme returns the unspecified marker instead of null")]
-    public void When_Map_IsCalled_WithCustomerMissingContactData_Then_SchemeReturnsUnspecifiedMarker()
+    [Fact(DisplayName = "when customer has no document, the scheme returns the unspecified marker instead of null")]
+    public void When_Map_IsCalled_WithCustomerMissingDocument_Then_SchemeReturnsUnspecifiedMarker()
     {
-        /* arrange: create customer entity without email and document */
+        /* arrange: create customer entity without a document */
         var customer = _fixture.Build<Customer>()
             .With(entity => entity.Id, "customer_d3TjZUiCvu32Uq2LiapbNWjKa")
             .With(entity => entity.Name, "João da Silva")
             .With(entity => entity.Phone, "11988887777")
-            .Without(entity => entity.Email)
             .Without(entity => entity.Document)
             .Create();
 
         /* act: map customer entity into customer scheme */
         var scheme = _mapper.Map<CustomerScheme>(customer);
 
-        /* assert: verify missing fields fall back to the unspecified marker */
-        Assert.Equal("NÃO ESPECIFICADO", scheme.Email);
+        /* assert: verify the missing document falls back to the unspecified marker */
         Assert.Equal("NÃO ESPECIFICADO", scheme.Document);
 
-        /* assert: verify provided phone is preserved */
+        /* assert: verify the provided phone is preserved */
         Assert.Equal("11988887777", scheme.Phone);
     }
 }
