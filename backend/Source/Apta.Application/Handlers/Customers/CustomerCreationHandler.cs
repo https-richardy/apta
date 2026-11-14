@@ -10,9 +10,11 @@ public sealed class CustomerCreationHandler(ICustomerRepository repository, IUni
             .WithIsDeleted(false)
             .Build();
 
-        var customers = await repository.FilterCustomersAsync(filter, cancellation);
-        var existing = customers.FirstOrDefault();
+        var customers = string.IsNullOrWhiteSpace(parameters.Document)
+            ? Enumerable.Empty<Customer>()
+            : await repository.FilterCustomersAsync(filter, cancellation);
 
+        var existing = customers.FirstOrDefault();
         if (existing is not null)
         {
             return Result<CustomerScheme>.Failure(CustomerErrors.AlreadyExists);
