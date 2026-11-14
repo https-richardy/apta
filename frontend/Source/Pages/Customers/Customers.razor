@@ -1,0 +1,33 @@
+@page "/customers"
+
+@attribute [Authorize]
+@implements IDisposable
+
+@inject CustomersService CustomersService
+
+<PageTitle>Base de Clientes | Apta™</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" Style="width: 100%;">
+    <div style="width: 960px; max-width: 95%;">
+        <FluentStack Orientation="Orientation.Vertical" VerticalGap="20">
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Top" Width="100%">
+                <Presentation Title="Clientes" Description="Gerencie aqui os clientes. Os clientes são as pessoas que compõem a base cadastral do seu negócio." />
+            </FluentStack>
+            <CustomerContent State="CustomersService.Query.CurrentState" />
+        </FluentStack>
+    </div>
+</FluentStack>
+
+@code {
+    private CustomerFiltersParameters _filters = new();
+    private IDisposable? _subscription;
+
+    public void Dispose() => _subscription?.Dispose();
+    protected override void OnInitialized()
+    {
+        _subscription = CustomersService.Query.State
+            .Subscribe(_ => InvokeAsync(StateHasChanged));
+
+        CustomersService.Query.SetArgs(_filters);
+    }
+}

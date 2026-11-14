@@ -1,0 +1,13 @@
+<FluentDataGrid Items="@Customers.AsQueryable()" TGridItem="CustomerScheme" GridTemplateColumns="2fr 2fr 2fr 2fr 1fr 1fr" Style="width: 100%;">
+    <PropertyColumn Property="@(customer => customer.Id)" Title="Identificador" />
+    <PropertyColumn Property="@(customer => customer.Name)" Title="Nome" Sortable="true" />
+    <PropertyColumn Property="@(customer => customer.Phone)" Title="Telefone" />
+    <PropertyColumn Property="@(customer => customer.Document)" Title="CPF" />
+    <PropertyColumn Property="@(customer => customer.CreatedAt)" Title="Criado em" Format="dd/MM/yyyy" />
+    <PropertyColumn Property="@(customer => customer.UpdatedAt)" Title="Atualizado em" Format="dd/MM/yyyy" />
+</FluentDataGrid>
+
+@code {
+    [Parameter]
+    public IReadOnlyCollection<CustomerScheme> Customers { get; set; } = [];
+}
