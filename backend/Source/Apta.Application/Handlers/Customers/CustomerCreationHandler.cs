@@ -7,7 +7,6 @@ public sealed class CustomerCreationHandler(ICustomerRepository repository, IUni
     {
         var filter = CustomerFilters.AsBuilder()
             .WithDocument(parameters.Document)
-            .WithIsDeleted(false)
             .Build();
 
         var customers = string.IsNullOrWhiteSpace(parameters.Document)
