@@ -57,4 +57,28 @@ public sealed class CustomerPageTests : BunitContext
         component.WaitForAssertion(() =>
             Assert.Contains("Não foi possível carregar os clientes", component.Markup));
     }
+
+    [Fact(DisplayName = "[component] - when the add action is clicked, the creation drawer is opened")]
+    public void When_AddActionClicked_Then_CreationDrawerIsOpened()
+    {
+        /* arrange: the client serves a page of customers */
+        var customers = _fixture.CreateMany<CustomerScheme>(3)
+            .ToList();
+
+        var page = _fixture.Build<Pagination<CustomerScheme>>()
+            .With(pagination => pagination.Items, customers)
+            .Create();
+
+        _client.Setup(client => client.GetCustomersAsync(It.IsAny<CustomerFiltersParameters>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<Pagination<CustomerScheme>>.Success(page));
+
+        var providers = Render<FluentProviders>();
+        var component = Render<Pages.Customers.Customers>();
+
+        /* act: click the add action */
+        component.Find("fluent-button[appearance='primary']").Click();
+
+        /* assert: the creation drawer is opened */
+        providers.WaitForAssertion(() => Assert.Contains("Novo cliente", providers.Markup));
+    }
 }

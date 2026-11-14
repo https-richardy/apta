@@ -16,6 +16,7 @@ global using Apta.WebUI.Pages.Administrators.Components.Forms;
 global using Apta.WebUI.Pages.Administrators.Components.Tables;
 global using Apta.WebUI.Pages.Customers.Components.Content;
 global using Apta.WebUI.Pages.Customers.Components.Tables;
+global using Apta.WebUI.Pages.Customers.Components.Forms;
 global using Apta.WebUI.Clients.Interfaces;
 global using Apta.WebUI.Services;
 global using Apta.WebUI.Authentication;
