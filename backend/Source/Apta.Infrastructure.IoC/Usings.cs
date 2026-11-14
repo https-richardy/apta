@@ -9,7 +9,9 @@ global using Apta.Application.Mapping;
 
 global using Apta.Application.Handlers.Administrators;
 global using Apta.Application.Transport.Administrators;
+global using Apta.Application.Transport.Customers;
 global using Apta.Application.Validators.Administrators;
+global using Apta.Application.Validators.Customers;
 
 global using Apta.Infrastructure.IoC.Configurations;
 global using Apta.Infrastructure.Persistence;

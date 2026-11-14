@@ -14,11 +14,11 @@ public sealed class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasMaxLength(200);
 
         builder.Property(customer => customer.Phone)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(20);
 
         builder.Property(customer => customer.Document)
-            .IsRequired()
+            .IsRequired(false)
             .HasMaxLength(14);
 
         builder.Property(customer => customer.CreatedAt)

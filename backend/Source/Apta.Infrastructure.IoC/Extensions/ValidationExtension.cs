@@ -8,5 +8,9 @@ internal static class ValidationExtension
         services.AddScoped<IValidator<AdministratorCreationScheme>, AdministratorCreationSchemeValidator>();
         services.AddScoped<IValidator<AdministratorFiltersParameters>, AdministratorFiltersParametersValidator>();
         services.AddScoped<IValidator<UpdateAdministratorScheme>, UpdateAdministratorSchemeValidator>();
+
+        services.AddScoped<IValidator<CustomerCreationScheme>, CustomerCreationSchemeValidator>();
+        services.AddScoped<IValidator<CustomerFiltersParameters>, CustomerFiltersParametersValidator>();
+        services.AddScoped<IValidator<UpdateCustomerScheme>, UpdateCustomerSchemeValidator>();
     }
 }
