@@ -34,6 +34,30 @@ public sealed class CustomersClient(HttpClient httpClient, INotificationService 
             : Result<CustomerScheme>.Failure(Error.Unknown);
     }
 
+    public async Task<Result<CustomerScheme>> UpdateCustomerAsync(UpdateCustomerScheme parameters, CancellationToken cancellation = default)
+    {
+        var response = await _httpClient.PutAsJsonAsync($"/api/v1/customers/{parameters.Id}", parameters, _serializer, cancellation);
+        var content = await response.Content.ReadAsStringAsync(cancellation);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var error = JsonSerializer.Deserialize<Error>(content, _serializer)!;
+
+            await _notificationService.CloseAllMessageBarsAsync();
+            await _notificationService.ShowErrorToastAsync(error.Code, error.Description);
+
+            return error is not null
+                ? Result<CustomerScheme>.Failure(error)
+                : Result<CustomerScheme>.Failure(Error.Unknown);
+        }
+
+        var customer = JsonSerializer.Deserialize<CustomerScheme>(content, _serializer);
+
+        return customer is not null
+            ? Result<CustomerScheme>.Success(customer)
+            : Result<CustomerScheme>.Failure(Error.Unknown);
+    }
+
     public async Task<Result<Pagination<CustomerScheme>>> GetCustomersAsync(CustomerFiltersParameters parameters, CancellationToken cancellation = default)
     {
         var queryString = QueryParametersParser.ToQueryString(parameters);
