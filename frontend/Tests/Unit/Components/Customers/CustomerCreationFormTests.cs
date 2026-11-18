@@ -44,14 +44,16 @@ public sealed class CustomerCreationFormTests : BunitContext
         Assert.Contains("123.456.789-09", form.Markup);
     }
 
-    [Fact(DisplayName = "[component] - when submitted with only the name, OnValidSubmit is invoked because a lead may have just the name")]
-    public void When_SubmittedWithOnlyName_Then_OnValidSubmitIsInvoked()
+    [Theory(DisplayName = "[component] - when submitted with only the name, OnValidSubmit is invoked because a lead may have just the name, whether the optional phone and document are null or empty")]
+    [InlineData(null, null)]
+    [InlineData("", "")]
+    public void When_SubmittedWithOnlyName_Then_OnValidSubmitIsInvoked(string? phone, string? document)
     {
-        /* arrange: a model with just the name, leaving phone and document empty */
+        /* arrange: a model with just the name, leaving phone and document null or empty */
         var model = _fixture.Build<CustomerCreationScheme>()
             .With(customer => customer.Name, "João da Silva")
-            .Without(customer => customer.Phone)
-            .Without(customer => customer.Document)
+            .With(customer => customer.Phone, phone)
+            .With(customer => customer.Document, document)
             .Create();
 
         var submitted = false;
