@@ -81,4 +81,42 @@ public sealed class CustomerPageTests : BunitContext
         /* assert: the creation drawer is opened */
         providers.WaitForAssertion(() => Assert.Contains("Novo cliente", providers.Markup));
     }
+
+    [Fact(DisplayName = "[component] - when a row is updated and the drawer is submitted, the customer is updated through the client")]
+    public void When_RowUpdatedAndSubmitted_Then_CustomerIsUpdatedThroughTheClient()
+    {
+        /* arrange: the client serves customers (with a valid phone and document so the edit form submits without retyping) and accepts updates */
+        var customers = _fixture.Build<CustomerScheme>()
+            .With(customer => customer.Phone, "(11) 98888-7777")
+            .With(customer => customer.Document, "123.456.789-09")
+            .CreateMany(3)
+            .ToList();
+
+        var page = _fixture.Build<Pagination<CustomerScheme>>()
+            .With(pagination => pagination.Items, customers)
+            .Create();
+
+        _client.Setup(client => client.GetCustomersAsync(It.IsAny<CustomerFiltersParameters>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<Pagination<CustomerScheme>>.Success(page));
+
+        _client.Setup(client => client.UpdateCustomerAsync(It.IsAny<UpdateCustomerScheme>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<CustomerScheme>.Success(customers[0]));
+
+        var providers = Render<FluentProviders>();
+        var component = Render<Pages.Customers.Customers>();
+
+        component.WaitForState(() => component.FindAll("fluent-button[title='Atualizar']").Count > 0);
+
+        /* act: open the update drawer for the first row and submit it */
+        component.Find("fluent-button[title='Atualizar']").Click();
+
+        providers.WaitForState(() => providers.Markup.Contains("Atualizar cliente"));
+        providers.Find("form").Submit();
+
+        /* assert: the first customer was updated through the client */
+        component.WaitForAssertion(() => _client.Verify(client => client.UpdateCustomerAsync(
+                It.Is<UpdateCustomerScheme>(scheme => scheme.Id == customers[0].Id),
+                It.IsAny<CancellationToken>()), Times.Once)
+        );
+    }
 }

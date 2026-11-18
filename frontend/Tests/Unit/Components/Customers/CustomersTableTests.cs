@@ -31,4 +31,23 @@ public sealed class CustomersTableTests : BunitContext
             Assert.Contains(customer.Document, table.Markup);
         });
     }
+
+    [Fact(DisplayName = "[component] - when the update action is clicked, OnUpdate is invoked with the row customer")]
+    public void When_UpdateActionIsClicked_Then_OnUpdateIsInvokedWithTheRowCustomer()
+    {
+        /* arrange: a single customer and a captured callback */
+        var customer = _fixture.Create<CustomerScheme>();
+
+        CustomerScheme? updated = null;
+
+        var table = Render<CustomersTable>(parameters => parameters
+            .Add(component => component.Customers, [customer])
+            .Add(component => component.OnUpdate, EventCallback.Factory.Create<CustomerScheme>(this, customer => updated = customer)));
+
+        /* act: click the row update button */
+        table.Find("fluent-button[title='Atualizar']").Click();
+
+        /* assert: the callback received the row customer */
+        Assert.Equal(customer, updated);
+    }
 }

@@ -63,6 +63,30 @@ public sealed class CustomerContentTests : BunitContext
         Assert.Equal(customers.Count, table.Instance.Customers.Count);
     }
 
+    [Fact(DisplayName = "[component] - when the query state carries customers, the update callback is forwarded to the table")]
+    public void When_StateHasData_Then_UpdateCallbackIsForwardedToTheTable()
+    {
+        /* arrange: a successful query state and the update handler wired on the content */
+        var customers = _fixture.CreateMany<CustomerScheme>(3)
+            .ToList();
+
+        var page = _fixture.Build<Pagination<CustomerScheme>>()
+            .With(pagination => pagination.Items, customers)
+            .Create();
+
+        var state = QueryState<Pagination<CustomerScheme>>.CreateSuccess(page, page);
+
+        /* act: render the content forwarding the update handler */
+        var content = Render<CustomerContent>(parameters => parameters
+            .Add(component => component.State, state)
+            .Add(component => component.OnUpdate, EventCallback.Factory.Create<CustomerScheme>(this, _ => { })));
+
+        /* assert: the table received the callback */
+        var table = content.FindComponent<CustomersTable>();
+
+        Assert.True(table.Instance.OnUpdate.HasDelegate);
+    }
+
     [Fact(DisplayName = "[component] - when the query state has no data yet, a skeleton is rendered")]
     public void When_StateHasNoDataYet_Then_SkeletonIsRendered()
     {
