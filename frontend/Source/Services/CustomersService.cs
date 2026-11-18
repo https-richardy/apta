@@ -5,6 +5,7 @@ public sealed class CustomersService
     public IQuery<CustomerFiltersParameters, Pagination<CustomerScheme>> Query { get; private set; }
     public IMutation<CustomerCreationScheme, CustomerScheme> CreateMutation { get; private set; }
     public IMutation<UpdateCustomerScheme, CustomerScheme> UpdateMutation { get; private set; }
+    public IMutation<CustomerDeletionScheme, Result> DeletionMutation { get; private set; }
 
     public CustomersService(IQueryClient queryClient, ICustomersClient customersClient)
     {
@@ -50,6 +51,21 @@ public sealed class CustomersService
                 }
 
                 return result.Data;
+            }
+        });
+
+        DeletionMutation = queryClient.CreateMutation(new MutationOptions<CustomerDeletionScheme, Result>
+        {
+            OnSuccess = (_, _) => Query.Refetch(),
+            Mutator = async (scheme, cancellation) =>
+            {
+                var result = await customersClient.DeleteCustomerAsync(scheme, cancellation);
+                if (result.IsFailure)
+                {
+                    throw new InvalidOperationException("não foi possível excluir o cliente");
+                }
+
+                return result;
             }
         });
     }

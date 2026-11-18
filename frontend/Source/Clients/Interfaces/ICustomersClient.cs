@@ -12,6 +12,11 @@ public interface ICustomersClient
         CancellationToken cancellation = default
     );
 
+    public Task<Result> DeleteCustomerAsync(
+        CustomerDeletionScheme parameters,
+        CancellationToken cancellation = default
+    );
+
     public Task<Result<Pagination<CustomerScheme>>> GetCustomersAsync(
         CustomerFiltersParameters parameters,
         CancellationToken cancellation = default
