@@ -7,7 +7,7 @@
         break;
 
     case { CurrentData: { } customers }:
-        <CustomersTable Customers="customers.Items" />
+        <CustomersTable Customers="customers.Items" OnUpdate="OnUpdate" />
         break;
 
     default:
@@ -18,4 +18,7 @@
 @code {
     [Parameter]
     public QueryState<Pagination<CustomerScheme>> State { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<CustomerScheme> OnUpdate { get; set; }
 }

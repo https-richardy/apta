@@ -1,0 +1,43 @@
+<EditForm Model="Model" OnValidSubmit="OnValidSubmit">
+    <FluentValidationValidator />
+    <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="width: 100%;">
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="16" Width="100%">
+            <div style="flex: 1; min-width: 0;">
+                <label style="font-size: 0.85rem; font-weight: 600;">Nome</label>
+                <FluentTextInput Value="@Model.Name" ValueChanged="@(value => Model.Name = value ?? string.Empty)" Placeholder="João da Silva" Style="width: 100%;" />
+                <FluentLabel Size="LabelSize.Small" Style="display: block; margin-top: 4px; opacity: 0.6;">Nome completo do cliente.</FluentLabel>
+                <ValidationMessage For="@(() => Model.Name)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+            </div>
+
+            <div style="flex: 1; min-width: 0;">
+                <label style="font-size: 0.85rem; font-weight: 600;">Telefone</label>
+                <FluentTextInput Value="@Model.Phone" ValueChanged="@(value => Model.Phone = value)" Placeholder="(11) 98888-7777" Style="width: 100%;" />
+                <FluentLabel Size="LabelSize.Small" Style="display: block; margin-top: 4px; opacity: 0.6;">Opcional. Telefone de contato do cliente.</FluentLabel>
+                <ValidationMessage For="@(() => Model.Phone)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+            </div>
+        </FluentStack>
+
+        <div style="width: 100%;">
+            <label style="font-size: 0.85rem; font-weight: 600;">CPF</label>
+            <FluentTextInput Value="@Model.Document" ValueChanged="@(value => Model.Document = value)" Placeholder="123.456.789-09" Style="width: 100%;" />
+            <FluentLabel Size="LabelSize.Small" Style="display: block; margin-top: 4px; opacity: 0.6;">Opcional. Um cliente pode ser cadastrado sem CPF.</FluentLabel>
+            <ValidationMessage For="@(() => Model.Document)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+        </div>
+
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+            <FluentButton Type="ButtonType.Submit" Appearance="ButtonAppearance.Primary">Salvar alterações</FluentButton>
+            <FluentButton Appearance="ButtonAppearance.Default" OnClick="OnCancel">Cancelar</FluentButton>
+        </FluentStack>
+    </FluentStack>
+</EditForm>
+
+@code {
+    [Parameter]
+    public UpdateCustomerScheme Model { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+}

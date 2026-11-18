@@ -16,7 +16,7 @@
                 <FluentSpacer />
                 <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
             </FluentStack>
-            <CustomerContent State="CustomersService.Query.CurrentState" />
+            <CustomerContent State="CustomersService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" />
         </FluentStack>
     </div>
 </FluentStack>
@@ -51,5 +51,30 @@
         }
 
         CustomersService.CreateMutation.Execute(model);
+    }
+
+    private async Task OpenUpdateSheetAsync(CustomerScheme customer)
+    {
+        var scheme = new UpdateCustomerScheme
+        {
+            Id = customer.Id,
+            Name = customer.Name,
+            Phone = customer.Phone,
+            Document = customer.Document
+        };
+
+        var result = await DialogService.ShowDrawerAsync<CustomerUpdateSheet>(options =>
+        {
+            options.Data = scheme;
+            options.Alignment = DialogAlignment.End;
+            options.Width = "560px";
+        });
+
+        if (result.Cancelled || result.GetValue<UpdateCustomerScheme>() is not { } model)
+        {
+            return;
+        }
+
+        CustomersService.UpdateMutation.Execute(model);
     }
 }
