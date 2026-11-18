@@ -4,6 +4,7 @@ public sealed class CustomersService
 {
     public IQuery<CustomerFiltersParameters, Pagination<CustomerScheme>> Query { get; private set; }
     public IMutation<CustomerCreationScheme, CustomerScheme> CreateMutation { get; private set; }
+    public IMutation<UpdateCustomerScheme, CustomerScheme> UpdateMutation { get; private set; }
 
     public CustomersService(IQueryClient queryClient, ICustomersClient customersClient)
     {
@@ -31,6 +32,21 @@ public sealed class CustomersService
                 if (result.IsFailure || result.Data is null)
                 {
                     throw new InvalidOperationException("não foi possível criar o cliente");
+                }
+
+                return result.Data;
+            }
+        });
+
+        UpdateMutation = queryClient.CreateMutation(new MutationOptions<UpdateCustomerScheme, CustomerScheme>
+        {
+            OnSuccess = (_, _) => Query.Refetch(),
+            Mutator = async (scheme, cancellation) =>
+            {
+                var result = await customersClient.UpdateCustomerAsync(scheme, cancellation);
+                if (result.IsFailure || result.Data is null)
+                {
+                    throw new InvalidOperationException("não foi possível atualizar o cliente");
                 }
 
                 return result.Data;
