@@ -50,4 +50,23 @@ public sealed class CustomersTableTests : BunitContext
         /* assert: the callback received the row customer */
         Assert.Equal(customer, updated);
     }
+
+    [Fact(DisplayName = "[component] - when the delete action is clicked, OnDelete is invoked with the row customer")]
+    public void When_DeleteActionIsClicked_Then_OnDeleteIsInvokedWithTheRowCustomer()
+    {
+        /* arrange: a single customer and a captured callback */
+        var customer = _fixture.Create<CustomerScheme>();
+
+        CustomerScheme? deleted = null;
+
+        var table = Render<CustomersTable>(parameters => parameters
+            .Add(component => component.Customers, [customer])
+            .Add(component => component.OnDelete, EventCallback.Factory.Create<CustomerScheme>(this, customer => deleted = customer)));
+
+        /* act: click the row delete button */
+        table.Find("fluent-button[title='Excluir']").Click();
+
+        /* assert: the callback received the row customer */
+        Assert.Equal(customer, deleted);
+    }
 }

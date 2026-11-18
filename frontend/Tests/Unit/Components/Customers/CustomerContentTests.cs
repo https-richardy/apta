@@ -87,6 +87,30 @@ public sealed class CustomerContentTests : BunitContext
         Assert.True(table.Instance.OnUpdate.HasDelegate);
     }
 
+    [Fact(DisplayName = "[component] - when the query state carries customers, the delete callback is forwarded to the table")]
+    public void When_StateHasData_Then_DeleteCallbackIsForwardedToTheTable()
+    {
+        /* arrange: a successful query state and the delete handler wired on the content */
+        var customers = _fixture.CreateMany<CustomerScheme>(3)
+            .ToList();
+
+        var page = _fixture.Build<Pagination<CustomerScheme>>()
+            .With(pagination => pagination.Items, customers)
+            .Create();
+
+        var state = QueryState<Pagination<CustomerScheme>>.CreateSuccess(page, page);
+
+        /* act: render the content forwarding the delete handler */
+        var content = Render<CustomerContent>(parameters => parameters
+            .Add(component => component.State, state)
+            .Add(component => component.OnDelete, EventCallback.Factory.Create<CustomerScheme>(this, _ => { })));
+
+        /* assert: the table received the callback */
+        var table = content.FindComponent<CustomersTable>();
+
+        Assert.True(table.Instance.OnDelete.HasDelegate);
+    }
+
     [Fact(DisplayName = "[component] - when the query state has no data yet, a skeleton is rendered")]
     public void When_StateHasNoDataYet_Then_SkeletonIsRendered()
     {

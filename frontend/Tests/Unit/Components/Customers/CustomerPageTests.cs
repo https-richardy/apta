@@ -119,4 +119,66 @@ public sealed class CustomerPageTests : BunitContext
                 It.IsAny<CancellationToken>()), Times.Once)
         );
     }
+
+    [Fact(DisplayName = "[component] - when the delete action is confirmed, the customer is deleted through the client")]
+    public void When_DeleteConfirmed_Then_CustomerIsDeletedThroughTheClient()
+    {
+        /* arrange: the client serves customers and accepts deletions */
+        var customers = _fixture.CreateMany<CustomerScheme>(3)
+            .ToList();
+
+        var page = _fixture.Build<Pagination<CustomerScheme>>()
+            .With(pagination => pagination.Items, customers)
+            .Create();
+
+        _client.Setup(client => client.GetCustomersAsync(It.IsAny<CustomerFiltersParameters>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<Pagination<CustomerScheme>>.Success(page));
+
+        _client.Setup(client => client.DeleteCustomerAsync(It.IsAny<CustomerDeletionScheme>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Success());
+
+        var providers = Render<FluentProviders>();
+        var component = Render<Pages.Customers.Customers>();
+
+        component.WaitForState(() => component.FindAll("fluent-button[title='Excluir']").Count > 0);
+        component.Find("fluent-button[title='Excluir']").Click();
+
+        /* act: confirm the deletion of the first row */
+        providers.WaitForState(() => providers.Markup.Contains("Excluir cliente"));
+        providers.FindAll("fluent-button").First(button => button.TextContent.Contains("Excluir")).Click();
+
+        /* assert: the first customer was deleted through the client */
+        component.WaitForAssertion(() => _client.Verify(client => client.DeleteCustomerAsync(
+                It.Is<CustomerDeletionScheme>(scheme => scheme.Id == customers[0].Id),
+                It.IsAny<CancellationToken>()), Times.Once)
+        );
+    }
+
+    [Fact(DisplayName = "[component] - when the delete action is dismissed, no deletion is performed")]
+    public void When_DeleteDismissed_Then_NoDeletionIsPerformed()
+    {
+        /* arrange: the client serves customers */
+        var customers = _fixture.CreateMany<CustomerScheme>(3)
+            .ToList();
+
+        var page = _fixture.Build<Pagination<CustomerScheme>>()
+            .With(pagination => pagination.Items, customers)
+            .Create();
+
+        _client.Setup(client => client.GetCustomersAsync(It.IsAny<CustomerFiltersParameters>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<Pagination<CustomerScheme>>.Success(page));
+
+        var providers = Render<FluentProviders>();
+        var component = Render<Pages.Customers.Customers>();
+
+        component.WaitForState(() => component.FindAll("fluent-button[title='Excluir']").Count > 0);
+        component.Find("fluent-button[title='Excluir']").Click();
+
+        /* act: dismiss the confirmation for the first row */
+        providers.WaitForState(() => providers.Markup.Contains("Excluir cliente"));
+        providers.FindAll("fluent-button").First(button => button.TextContent.Contains("Cancelar")).Click();
+
+        /* assert: nothing was deleted */
+        _client.Verify(client => client.DeleteCustomerAsync(It.IsAny<CustomerDeletionScheme>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
 }
