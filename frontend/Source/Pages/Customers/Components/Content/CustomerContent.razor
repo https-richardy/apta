@@ -7,7 +7,7 @@
         break;
 
     case { CurrentData: { } customers }:
-        <CustomersTable Customers="customers.Items" OnUpdate="OnUpdate" />
+        <CustomersTable Customers="customers.Items" OnUpdate="OnUpdate" OnDelete="OnDelete" />
         break;
 
     default:
@@ -21,4 +21,7 @@
 
     [Parameter]
     public EventCallback<CustomerScheme> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback<CustomerScheme> OnDelete { get; set; }
 }

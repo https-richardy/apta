@@ -16,7 +16,7 @@
                 <FluentSpacer />
                 <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
             </FluentStack>
-            <CustomerContent State="CustomersService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" />
+            <CustomerContent State="CustomersService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" OnDelete="DeleteAsync" />
         </FluentStack>
     </div>
 </FluentStack>
@@ -76,5 +76,22 @@
         }
 
         CustomersService.UpdateMutation.Execute(model);
+    }
+
+    private async Task DeleteAsync(CustomerScheme customer)
+    {
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            message: $"Tem certeza de que deseja excluir o cliente \"{customer.Name}\"? Esta ação não poderá ser desfeita.",
+            title: "Excluir cliente",
+            primaryButton: "Excluir",
+            secondaryButton: "Cancelar"
+        );
+
+        if (confirmation.Cancelled)
+        {
+            return;
+        }
+
+        CustomersService.DeletionMutation.Execute(new CustomerDeletionScheme { Id = customer.Id });
     }
 }
