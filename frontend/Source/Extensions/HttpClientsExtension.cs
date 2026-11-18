@@ -19,10 +19,19 @@ internal static class HttpClientsExtension
             client.Timeout = TimeSpan.Parse(settings.Gateway.Timeout);
         });
 
+        var customersClient = services.AddHttpClient<ICustomersClient, CustomersClient>(client =>
+        {
+            client.BaseAddress = new Uri(settings.Gateway.Address);
+            client.Timeout = TimeSpan.Parse(settings.Gateway.Timeout);
+        });
+
         authenticationClient.AddHttpMessageHandler<HttpErrorInterceptor>();
         authenticationClient.AddHttpMessageHandler<AuthenticationInterceptor>();
 
         administratorsClient.AddHttpMessageHandler<HttpErrorInterceptor>();
         administratorsClient.AddHttpMessageHandler<AuthenticationInterceptor>();
+
+        customersClient.AddHttpMessageHandler<HttpErrorInterceptor>();
+        customersClient.AddHttpMessageHandler<AuthenticationInterceptor>();
     }
 }

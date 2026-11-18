@@ -1,0 +1,97 @@
+@page "/customers"
+
+@attribute [Authorize]
+@implements IDisposable
+
+@inject CustomersService CustomersService
+@inject IDialogService DialogService
+
+<PageTitle>Base de Clientes | Apta™</PageTitle>
+
+<FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" Style="width: 100%;">
+    <div style="width: 960px; max-width: 95%;">
+        <FluentStack Orientation="Orientation.Vertical" VerticalGap="20">
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Top" Width="100%">
+                <Presentation Title="Clientes" Description="Gerencie aqui os clientes. Os clientes são as pessoas que compõem a base cadastral do seu negócio." />
+                <FluentSpacer />
+                <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
+            </FluentStack>
+            <CustomerContent State="CustomersService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" OnDelete="DeleteAsync" />
+        </FluentStack>
+    </div>
+</FluentStack>
+
+@code {
+    private static readonly Icon AddIcon = new Size20.Add();
+
+    private CustomerFiltersParameters _filters = new();
+    private IDisposable? _subscription;
+
+    public void Dispose() => _subscription?.Dispose();
+    protected override void OnInitialized()
+    {
+        _subscription = CustomersService.Query.State
+            .Subscribe(_ => InvokeAsync(StateHasChanged));
+
+        CustomersService.Query.SetArgs(_filters);
+    }
+
+    private async Task OpenSheetAsync()
+    {
+        var result = await DialogService.ShowDrawerAsync<CustomerCreationSheet>(options =>
+        {
+            options.Data = new CustomerCreationScheme();
+            options.Alignment = DialogAlignment.End;
+            options.Width = "560px";
+        });
+
+        if (result.Cancelled || result.GetValue<CustomerCreationScheme>() is not { } model)
+        {
+            return;
+        }
+
+        CustomersService.CreateMutation.Execute(model);
+    }
+
+    private async Task OpenUpdateSheetAsync(CustomerScheme customer)
+    {
+        var scheme = new UpdateCustomerScheme
+        {
+            Id = customer.Id,
+            Name = customer.Name,
+            Phone = customer.Phone,
+            Document = customer.Document
+        };
+
+        var result = await DialogService.ShowDrawerAsync<CustomerUpdateSheet>(options =>
+        {
+            options.Data = scheme;
+            options.Alignment = DialogAlignment.End;
+            options.Width = "560px";
+        });
+
+        if (result.Cancelled || result.GetValue<UpdateCustomerScheme>() is not { } model)
+        {
+            return;
+        }
+
+        CustomersService.UpdateMutation.Execute(model);
+    }
+
+    private async Task DeleteAsync(CustomerScheme customer)
+    {
+        var confirmation = await DialogService.ShowConfirmationAsync(
+            message: $"Tem certeza de que deseja excluir o cliente \"{customer.Name}\"? Esta ação não poderá ser desfeita.",
+            title: "Excluir cliente",
+            primaryButton: "Excluir",
+            secondaryButton: "Cancelar"
+        );
+
+        if (confirmation.Cancelled)
+        {
+            return;
+        }
+
+        CustomersService.DeletionMutation.Execute(new CustomerDeletionScheme { Id = customer.Id });
+    }
+}

@@ -24,6 +24,7 @@ global using Apta.WebUI.Extensions;
 global using Apta.WebUI.Transport;
 global using Apta.WebUI.Transport.Administrators;
 global using Apta.WebUI.Transport.Authentication;
+global using Apta.WebUI.Transport.Customers;
 global using Apta.WebUI.Interceptors;
 global using Apta.WebUI.Services;
 global using Apta.WebUI.Utilities;

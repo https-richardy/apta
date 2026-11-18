@@ -1,0 +1,27 @@
+@switch (State)
+{
+    case { HasError: true }:
+        <FluentMessageBar Intent="MessageBarIntent.Error">
+            Não foi possível carregar os clientes, se o problema persistir, contate o suporte técnico.
+        </FluentMessageBar>
+        break;
+
+    case { CurrentData: { } customers }:
+        <CustomersTable Customers="customers.Items" OnUpdate="OnUpdate" OnDelete="OnDelete" />
+        break;
+
+    default:
+        <CustomersSkeleton />
+        break;
+}
+
+@code {
+    [Parameter]
+    public QueryState<Pagination<CustomerScheme>> State { get; set; } = default!;
+
+    [Parameter]
+    public EventCallback<CustomerScheme> OnUpdate { get; set; }
+
+    [Parameter]
+    public EventCallback<CustomerScheme> OnDelete { get; set; }
+}
