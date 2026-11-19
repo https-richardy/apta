@@ -8,10 +8,10 @@ public static class TransformersExtension
         services.AddOpenApi(options =>
         {
             options.AddScalarTransformers();
+            options.AddOperationTransformer<BlobTransformer>();
             options.AddDocumentTransformer<SecurityTransformer>();
             options.AddDocumentTransformer<DescriptionTransformer>();
             options.AddDocumentTransformer<TagsTransformer>();
-            options.AddSchemaTransformer<BlobSchemaTransformer>();
         });
     }
 }
