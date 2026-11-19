@@ -5,12 +5,14 @@
 #  Gets your local repo back in line with the remote:
 #    1. fetch everything and prune stale remote-tracking refs
 #    2. switch to the default branch (main/master) and fast-forward it
-#    3. delete local branches whose remote branch is gone
+#    3. force-delete local branches whose remote branch is gone
+#       (merged and deleted on the remote, e.g. after a squash/merge PR)
 #
-#  Safe by design: it aborts on a dirty working tree, only fast-forwards
-#  (never force-resets), and only deletes branches that are fully merged
-#  (unmerged ones are skipped with a warning), so it never throws away
-#  local work.
+#  Safe by design: it aborts on a dirty working tree and only fast-forwards
+#  the default branch (never force-resets). Step 3 only ever touches
+#  branches marked "[gone]" (their remote branch was deleted on GitHub),
+#  mirroring the remote; branches never pushed have no upstream, so they
+#  are never "[gone]" and are left untouched.
 #
 #  The repo root is resolved from this script's location
 #  (scripts/unix -> ../..), so it works from anywhere.
@@ -102,11 +104,11 @@ pruned=0
 while IFS= read -r br; do
     [ -z "$br" ] && continue
     [ "$br" = "$default_branch" ] && continue
-    if git branch -d "$br" >/dev/null 2>&1; then
-        echo "    [-] $br ... DELETED (MERGED)"
+    if git branch -D "$br" >/dev/null 2>&1; then
+        echo "    [-] $br ... DELETED (GONE FROM REMOTE)"
         pruned=$((pruned + 1))
     else
-        echo "    [!] $br ... SKIPPED (UNMERGED COMMITS)"
+        echo "    [!] $br ... COULD NOT DELETE"
     fi
 done < <(git for-each-ref --format='%(refname:short) %(upstream:track)' refs/heads | awk '$2=="[gone]"{print $1}')
 echo "    $pruned BRANCH(ES) PRUNED."
