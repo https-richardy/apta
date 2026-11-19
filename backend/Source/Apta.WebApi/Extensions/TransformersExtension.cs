@@ -11,6 +11,7 @@ public static class TransformersExtension
             options.AddDocumentTransformer<SecurityTransformer>();
             options.AddDocumentTransformer<DescriptionTransformer>();
             options.AddDocumentTransformer<TagsTransformer>();
+            options.AddSchemaTransformer<BlobSchemaTransformer>();
         });
     }
 }
