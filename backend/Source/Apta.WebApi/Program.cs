@@ -8,7 +8,7 @@ public partial class Program
         var configuration = builder.Configuration;
 
         builder.Services.AddInfrastructure(configuration);
-        builder.Services.AddWebInfrastructure(configuration);
+        builder.Services.AddWebInfrastructure();
 
         builder.Configuration.AddEnvironmentVariables();
 
