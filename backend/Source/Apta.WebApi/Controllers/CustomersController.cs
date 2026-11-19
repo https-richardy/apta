@@ -71,4 +71,22 @@ public sealed class CustomersController(IDispatcher dispatcher) : ControllerBase
                 StatusCode(StatusCodes.Status404NotFound, result.Error),
         };
     }
+
+    [HttpPost("import")]
+    [Authorize]
+    [Consumes(MediaTypeNames.Multipart.FormData)]
+    [EndpointDescription("imports customers in batch from a csv file, processed asynchronously through the queue")]
+    public async Task<IActionResult> ImportCustomersAsync([FromForm] CustomersImportScheme request, CancellationToken cancellation)
+    {
+        var result = await dispatcher.DispatchAsync(request, cancellation);
+
+        return result switch
+        {
+            { IsSuccess: true } =>
+                StatusCode(StatusCodes.Status202Accepted),
+
+            { IsFailure: true } when result.Error == CustomerErrors.NoFileContent =>
+                StatusCode(StatusCodes.Status422UnprocessableEntity, result.Error),
+        };
+    }
 }
