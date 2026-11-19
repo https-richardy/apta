@@ -11,6 +11,7 @@ public static class InfrastructureExtension
         services.AddValidation();
         services.AddMediator();
         services.AddQueue();
+        services.AddServices();
         services.AddMapping();
     }
 }
