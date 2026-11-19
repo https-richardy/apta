@@ -354,6 +354,64 @@ public sealed class CustomersControllerTests(ApplicationFixture factory) :
         Assert.Equal(CustomerErrors.DoesNotExist, result);
     }
 
+    [Fact(DisplayName = "[e2e] - when POST /api/v1/customers/import is called with a valid csv, 202 is returned with no content")]
+    public async Task When_ImportCustomers_IsCalled_WithValidCsv_Then_202AcceptedIsReturnedWithNoContent()
+    {
+        /* arrange: resolve the http client and build a valid csv upload */
+        var httpClient = factory.HttpClient;
+        var content = "document;name;phone\n52998224725;João da Silva;11988887777\n11144477735;Maria Oliveira;21977776666";
+
+        using var form = new MultipartFormDataContent();
+
+        form.Add(new ByteArrayContent(Encoding.UTF8.GetBytes(content)), "file", "customers.csv");
+
+        /* act: send the multipart POST request to the import endpoint */
+        var response = await httpClient.PostAsync("/api/v1/customers/import", form, TestContext.Current.CancellationToken);
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        /* assert: verify the import was accepted with no content */
+        Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+        Assert.True(string.IsNullOrEmpty(body));
+    }
+
+    [Fact(DisplayName = "[e2e] - when POST /api/v1/customers/import is called with a non-csv file, 400 is returned")]
+    public async Task When_ImportCustomers_IsCalled_WithNonCsvFile_Then_400BadRequestIsReturned()
+    {
+        /* arrange: resolve the http client and build an upload that is not a csv */
+        var httpClient = factory.HttpClient;
+
+        using var form = new MultipartFormDataContent();
+
+        form.Add(new ByteArrayContent(Encoding.UTF8.GetBytes("not a csv file")), "file", "customers.txt");
+
+        /* act: send the multipart POST request to the import endpoint */
+        var response = await httpClient.PostAsync("/api/v1/customers/import", form, TestContext.Current.CancellationToken);
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        /* assert: verify the request was rejected by validation */
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.False(string.IsNullOrWhiteSpace(body));
+    }
+
+    [Fact(DisplayName = "[e2e] - when POST /api/v1/customers/import is called without a file, 400 is returned")]
+    public async Task When_ImportCustomers_IsCalled_WithoutFile_Then_400BadRequestIsReturned()
+    {
+        /* arrange: resolve the http client and build a multipart request carrying no file */
+        var httpClient = factory.HttpClient;
+        using var form = new MultipartFormDataContent
+        {
+            { new StringContent("placeholder"), "unused" }
+        };
+
+        /* act: send the multipart POST request to the import endpoint */
+        var response = await httpClient.PostAsync("/api/v1/customers/import", form, TestContext.Current.CancellationToken);
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+
+        /* assert: verify the request was rejected by validation */
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.False(string.IsNullOrWhiteSpace(body));
+    }
+
     public async ValueTask DisposeAsync() => await ValueTask.FromResult(ValueTask.CompletedTask);
     public async ValueTask InitializeAsync() => await factory.CleanDatabaseAsync();
 }
