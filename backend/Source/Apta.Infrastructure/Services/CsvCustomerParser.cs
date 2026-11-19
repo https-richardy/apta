@@ -23,9 +23,11 @@ public sealed class CsvCustomerParser : ICustomerParser
         {
             _customers.Add(new Customer
             {
-                Name = parser.GetField<string>(0) ?? string.Empty.OrFallback(),
-                Document = parser.GetField<string>(1) ?? string.Empty.OrFallback(),
-                Phone = parser.GetField<string>(2) ?? string.Empty.OrFallback(),
+                Document = parser.GetField<string>(0) ?? string.Empty,
+
+                /* unlike the document, these fields may fall back to a "not informed" value by default */
+                Name = parser.GetField<string>(1) ?? string.Empty.OrNotInformed(),
+                Phone = parser.GetField<string>(2) ?? string.Empty.OrNotInformed(),
             });
         }
 
