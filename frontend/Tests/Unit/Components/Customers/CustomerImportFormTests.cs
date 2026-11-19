@@ -16,7 +16,7 @@ public sealed class CustomerImportFormTests : BunitContext
 
         /* assert: the drop zone instructions are present */
         Assert.Contains("Arraste o arquivo CSV aqui ou clique para selecionar", form.Markup);
-        Assert.Contains("Apenas arquivos .csv, até 5 MB.", form.Markup);
+        Assert.Contains("Apenas arquivos .csv, até 30 MB.", form.Markup);
 
         /* assert: both actions are present */
         Assert.Contains("Importar", form.Markup);
@@ -81,12 +81,12 @@ public sealed class CustomerImportFormTests : BunitContext
         Assert.Contains("o arquivo deve ser um .csv.", form.Markup);
     }
 
-    [Fact(DisplayName = "[component] - when submitted with a file over 5 MB, OnValidSubmit is blocked and the size message is shown")]
+    [Fact(DisplayName = "[component] - when submitted with a file over 30 MB, OnValidSubmit is blocked and the size message is shown")]
     public void When_SubmittedWithOversizedFile_Then_OnValidSubmitIsBlockedAndSizeMessageIsShown()
     {
-        /* arrange: a csv model whose content exceeds the 5 MB limit */
+        /* arrange: a csv model whose content exceeds the 30 MB limit */
         var content = new MemoryStream();
-        content.SetLength((5 * 1024 * 1024) + 1);
+        content.SetLength((30 * 1024 * 1024) + 1);
 
         var model = new CustomersImportScheme
         {
@@ -104,7 +104,7 @@ public sealed class CustomerImportFormTests : BunitContext
 
         /* assert: the submit was blocked and the size message surfaced */
         Assert.False(submitted);
-        Assert.Contains("o arquivo deve ter no máximo 5 MB.", form.Markup);
+        Assert.Contains("o arquivo deve ter no máximo 30 MB.", form.Markup);
     }
 
     [Fact(DisplayName = "[component] - when submitted with a valid csv within the limit, OnValidSubmit is invoked with the model")]

@@ -7,8 +7,8 @@ public sealed class CustomersImportSchemeValidator : AbstractValidator<Customers
         RuleFor(import => import.Content)
             .NotNull()
             .WithMessage("selecione um arquivo para importar.")
-            .Must(content => content.Length <= 5 * 1024 * 1024)
-            .WithMessage("o arquivo deve ter no máximo 5 MB.")
+            .Must(content => content.Length <= 30 * 1024 * 1024)
+            .WithMessage("o arquivo deve ter no máximo 30 MB.")
             .When(import => import.Content is not null, ApplyConditionTo.CurrentValidator);
 
         RuleFor(import => import.FileName)
