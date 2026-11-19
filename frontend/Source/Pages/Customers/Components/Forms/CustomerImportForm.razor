@@ -1,9 +1,9 @@
 <EditForm Model="_model" OnValidSubmit="SubmitAsync">
     <FluentValidationValidator />
-    <FluentStack Orientation="Orientation.Vertical" VerticalGap="16" Style="width: 100%;">
-        <FluentInputFile @ref="_input" Mode="InputFileMode.Stream" Accept=".csv" MaximumFileCount="1" DragDropZoneVisible="true" OnFileUploaded="OnFileUploadedAsync" Style="min-height: 140px; border: 1px dashed var(--colorNeutralStroke1); border-radius: 8px;">
+    <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalGap="16" Width="100%">
+        <FluentInputFile @ref="_input" Mode="InputFileMode.Stream" Accept=".csv" MaximumFileCount="1" DragDropZoneVisible="true" OnFileUploaded="OnFileUploadedAsync" Style="min-height: 140px; width: 100%; box-sizing: border-box; border: 1px dashed var(--colorNeutralStroke1); border-radius: 8px;">
             <ChildContent>
-                <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalGap="8" Style="padding: 24px 0;">
+                <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalGap="8" Style="padding: 24px 32px; width: 100%; text-align: center;">
                     <FluentIcon Value="@UploadIcon" Color="Color.Primary" />
                     <div style="font-weight: 600;">Arraste o arquivo CSV aqui ou clique para selecionar</div>
                     <FluentLabel Size="LabelSize.Small" Style="opacity: 0.6;">Apenas arquivos .csv, até 5 MB.</FluentLabel>
@@ -23,7 +23,7 @@
             </FluentMessageBar>
         }
 
-        <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="8">
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center" HorizontalGap="8">
             <FluentButton Type="ButtonType.Submit" Appearance="ButtonAppearance.Primary">Importar</FluentButton>
             <FluentButton Appearance="ButtonAppearance.Default" OnClick="OnCancel">Cancelar</FluentButton>
         </FluentStack>
