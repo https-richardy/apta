@@ -15,6 +15,7 @@ global using Apta.Application.Validators.Administrators;
 global using Apta.Application.Validators.Customers;
 
 global using Apta.Infrastructure.Services;
+global using Apta.Infrastructure.Workers;
 global using Apta.Infrastructure.Persistence;
 global using Apta.Infrastructure.Persistence.Repositories;
 global using Apta.Infrastructure.IoC.Configurations;

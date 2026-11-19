@@ -7,7 +7,7 @@ public static class QueueExtension
     {
         services.AddMemoryQueue(options =>
         {
-            options.ScanAssembly<AdministratorCreationHandler>();
+            options.ScanAssembly<ImportCustomersWorker>();
         });
     }
 }
