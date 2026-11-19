@@ -82,6 +82,32 @@ public sealed class CustomerPageTests : BunitContext
         providers.WaitForAssertion(() => Assert.Contains("Novo cliente", providers.Markup));
     }
 
+    [Fact(DisplayName = "[component] - when the import action is clicked, the import dialog is opened")]
+    public void When_ImportActionClicked_Then_ImportDialogIsOpened()
+    {
+        /* arrange: the client serves a page of customers */
+        var customers = _fixture.CreateMany<CustomerScheme>(3)
+            .ToList();
+
+        var page = _fixture.Build<Pagination<CustomerScheme>>()
+            .With(pagination => pagination.Items, customers)
+            .Create();
+
+        _client.Setup(client => client.GetCustomersAsync(It.IsAny<CustomerFiltersParameters>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result<Pagination<CustomerScheme>>.Success(page));
+
+        var providers = Render<FluentProviders>();
+        var component = Render<Pages.Customers.Customers>();
+
+        /* act: click the import action */
+        component.FindAll("fluent-button")
+            .First(button => button.TextContent.Contains("Importar base"))
+            .Click();
+
+        /* assert: the import dialog is opened */
+        providers.WaitForAssertion(() => Assert.Contains("Importar clientes", providers.Markup));
+    }
+
     [Fact(DisplayName = "[component] - when a row is updated and the drawer is submitted, the customer is updated through the client")]
     public void When_RowUpdatedAndSubmitted_Then_CustomerIsUpdatedThroughTheClient()
     {

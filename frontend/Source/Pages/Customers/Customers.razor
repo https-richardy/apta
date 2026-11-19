@@ -11,10 +11,16 @@
 <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" Style="width: 100%;">
     <div style="width: 960px; max-width: 95%;">
         <FluentStack Orientation="Orientation.Vertical" VerticalGap="20">
-            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Top" Width="100%">
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Top" HorizontalGap="12" Width="100%">
                 <Presentation Title="Clientes" Description="Gerencie aqui os clientes. Os clientes são as pessoas que compõem a base cadastral do seu negócio." />
                 <FluentSpacer />
-                <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync">Adicionar</FluentButton>
+                <FluentButton Appearance="ButtonAppearance.Subtle" OnClick="OpenImportSheetAsync" Style="white-space: nowrap;">
+                    <FluentStack Orientation="Orientation.Horizontal" HorizontalGap="6" VerticalAlignment="VerticalAlignment.Center">
+                        <FluentIcon Value="@ImportIcon" />
+                        Importar base
+                    </FluentStack>
+                </FluentButton>
+                <FluentButton Appearance="ButtonAppearance.Primary" IconStart="@AddIcon" OnClick="OpenSheetAsync" Style="white-space: nowrap;">Adicionar</FluentButton>
             </FluentStack>
             <CustomerContent State="CustomersService.Query.CurrentState" OnUpdate="OpenUpdateSheetAsync" OnDelete="DeleteAsync" />
         </FluentStack>
@@ -23,6 +29,7 @@
 
 @code {
     private static readonly Icon AddIcon = new Size20.Add();
+    private static readonly Icon ImportIcon = new Size20.DocumentTable();
 
     private CustomerFiltersParameters _filters = new();
     private IDisposable? _subscription;
@@ -76,6 +83,22 @@
         }
 
         CustomersService.UpdateMutation.Execute(model);
+    }
+
+    private async Task OpenImportSheetAsync()
+    {
+        var result = await DialogService.ShowDialogAsync<CustomerImportSheet>(options =>
+        {
+            options.Width = "520px";
+            options.Padding = "0";
+        });
+
+        if (result.Cancelled || result.GetValue<CustomersImportScheme>() is not { } model)
+        {
+            return;
+        }
+
+        CustomersService.ImportMutation.Execute(model);
     }
 
     private async Task DeleteAsync(CustomerScheme customer)

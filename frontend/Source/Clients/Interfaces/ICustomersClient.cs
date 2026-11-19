@@ -21,4 +21,9 @@ public interface ICustomersClient
         CustomerFiltersParameters parameters,
         CancellationToken cancellation = default
     );
+
+    public Task<Result> ImportCustomersAsync(
+        CustomersImportScheme parameters,
+        CancellationToken cancellation = default
+    );
 }

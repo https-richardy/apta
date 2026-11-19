@@ -1,0 +1,59 @@
+<EditForm Model="Model" OnValidSubmit="SubmitAsync">
+    <FluentValidationValidator />
+    <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalGap="16" Width="100%">
+        <FluentInputFile @ref="_input" Mode="InputFileMode.Stream" Accept=".csv" MaximumFileCount="1" DragDropZoneVisible="true" OnFileUploaded="OnFileUploadedAsync" Style="min-height: 140px; width: 100%; box-sizing: border-box; border: 1px dashed var(--colorNeutralStroke1); border-radius: 8px;">
+            <ChildContent>
+                <FluentStack Orientation="Orientation.Vertical" HorizontalAlignment="HorizontalAlignment.Center" VerticalGap="8" Style="padding: 24px 32px; width: 100%; text-align: center;">
+                    <FluentIcon Value="@UploadIcon" Color="Color.Primary" />
+                    <div style="font-weight: 600;">Arraste o arquivo CSV aqui ou clique para selecionar</div>
+                    <FluentLabel Size="LabelSize.Small" Style="opacity: 0.6;">Apenas arquivos .csv, até 5 MB.</FluentLabel>
+                </FluentStack>
+            </ChildContent>
+        </FluentInputFile>
+
+        <div style="width: 100%;">
+            <ValidationMessage For="@(() => Model.Content)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+            <ValidationMessage For="@(() => Model.FileName)" style="font-size: 0.8rem; color: var(--error, #d13438);" />
+        </div>
+
+        @if (Model.Content is not null && !string.IsNullOrEmpty(Model.FileName))
+        {
+            <FluentMessageBar Intent="MessageBarIntent.Success" AllowDismiss="false">
+                Arquivo pronto para importação: <strong>@Model.FileName</strong>
+            </FluentMessageBar>
+        }
+
+        <FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Center" HorizontalGap="8">
+            <FluentButton Type="ButtonType.Submit" Appearance="ButtonAppearance.Primary">Importar</FluentButton>
+            <FluentButton Appearance="ButtonAppearance.Default" OnClick="OnCancel">Cancelar</FluentButton>
+        </FluentStack>
+    </FluentStack>
+</EditForm>
+
+@code {
+    private readonly Icon UploadIcon = new Size24.ArrowUpload();
+
+    private FluentInputFile? _input;
+
+    [Parameter]
+    public CustomersImportScheme Model { get; set; } = new();
+
+    [Parameter]
+    public EventCallback<CustomersImportScheme> OnValidSubmit { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+
+    private async Task SubmitAsync() => await OnValidSubmit.InvokeAsync(Model);
+    private async Task OnFileUploadedAsync(FluentInputFileEventArgs file)
+    {
+        var buffer = new MemoryStream();
+
+        await file.Stream!.CopyToAsync(buffer);
+
+        buffer.Position = 0;
+
+        Model.Content = buffer;
+        Model.FileName = file.Name;
+    }
+}

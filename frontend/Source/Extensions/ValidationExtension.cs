@@ -8,5 +8,6 @@ internal static class ValidationExtension
         services.AddScoped<IValidator<AuthenticationCredentialsScheme>, AuthenticationCredentialsValidator>();
         services.AddScoped<IValidator<AdministratorCreationScheme>, AdministratorCreationValidator>();
         services.AddScoped<IValidator<UpdateAdministratorScheme>, UpdateAdministratorValidator>();
+        services.AddScoped<IValidator<CustomersImportScheme>, CustomersImportSchemeValidator>();
     }
 }

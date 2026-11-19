@@ -6,8 +6,9 @@ public sealed class CustomersService
     public IMutation<CustomerCreationScheme, CustomerScheme> CreateMutation { get; private set; }
     public IMutation<UpdateCustomerScheme, CustomerScheme> UpdateMutation { get; private set; }
     public IMutation<CustomerDeletionScheme, Result> DeletionMutation { get; private set; }
+    public IMutation<CustomersImportScheme, Result> ImportMutation { get; private set; }
 
-    public CustomersService(IQueryClient queryClient, ICustomersClient customersClient)
+    public CustomersService(IQueryClient queryClient, ICustomersClient customersClient, INotificationService notification)
     {
         Query = queryClient.CreateQuery(new QueryOptions<CustomerFiltersParameters, Pagination<CustomerScheme>>
         {
@@ -63,6 +64,21 @@ public sealed class CustomersService
                 if (result.IsFailure)
                 {
                     throw new InvalidOperationException("não foi possível excluir o cliente");
+                }
+
+                return result;
+            }
+        });
+
+        ImportMutation = queryClient.CreateMutation(new MutationOptions<CustomersImportScheme, Result>
+        {
+            OnSuccess = (_, _) => notification.ShowSuccessToastAsync("Importação iniciada", "O arquivo foi recebido e os clientes estão sendo importados em segundo plano."),
+            Mutator = async (scheme, cancellation) =>
+            {
+                var result = await customersClient.ImportCustomersAsync(scheme, cancellation);
+                if (result.IsFailure)
+                {
+                    throw new InvalidOperationException("não foi possível importar os clientes");
                 }
 
                 return result;
