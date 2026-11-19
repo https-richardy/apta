@@ -7,12 +7,14 @@ rem
 rem  Gets your local repo back in line with the remote:
 rem    1. fetch everything and prune stale remote-tracking refs
 rem    2. switch to the default branch (main/master) and fast-forward it
-rem    3. delete local branches whose remote branch is gone
+rem    3. force-delete local branches whose remote branch is gone
+rem       (merged and deleted on the remote, e.g. after a squash/merge PR)
 rem
-rem  Safe by design: it aborts on a dirty working tree, only fast-forwards
-rem  (never force-resets), and only deletes branches that are fully merged
-rem  (unmerged ones are skipped with a warning), so it never throws away
-rem  local work.
+rem  Safe by design: it aborts on a dirty working tree and only fast-forwards
+rem  the default branch (never force-resets). Step 3 only ever touches
+rem  branches marked "[gone]" (their remote branch was deleted on GitHub),
+rem  mirroring the remote; branches never pushed have no upstream, so they
+rem  are never "[gone]" and are left untouched.
 rem
 rem  Double-click to run. The repo root is resolved from this script's
 rem  location (scripts\windows -> ..\..), so it works from anywhere.
@@ -89,11 +91,11 @@ echo [+] (3/3) PRUNING LOCAL BRANCHES GONE FROM REMOTE...
 set "PRUNED=0"
 for /f "tokens=1" %%b in ('git for-each-ref --format^="%%(refname:short) %%(upstream:track)" refs/heads ^| findstr /c:"[gone]"') do (
     if /i not "%%b"=="!DEFAULT!" (
-        git branch -d "%%b" >nul 2>&1
+        git branch -D "%%b" >nul 2>&1
         if errorlevel 1 (
-            echo     [!] %%b ... SKIPPED ^(UNMERGED COMMITS^)
+            echo     [!] %%b ... COULD NOT DELETE
         ) else (
-            echo     [-] %%b ... DELETED ^(MERGED^)
+            echo     [-] %%b ... DELETED ^(GONE FROM REMOTE^)
             set /a PRUNED+=1
         )
     )
