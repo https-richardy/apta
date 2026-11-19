@@ -1,0 +1,25 @@
+<FluentStack Orientation="Orientation.Vertical" VerticalGap="20" Style="padding: 24px; width: 100%;">
+    <div style="font-size: 1.1rem; font-weight: 700;">Importar clientes</div>
+    <FluentLabel Size="LabelSize.Small" Style="opacity: 0.75;">
+        Envie um arquivo CSV com os clientes a serem importados. O processamento ocorre em segundo plano e os clientes aparecerão na lista aos poucos.
+    </FluentLabel>
+
+    <FluentAnchorButton Href="templates/template.csv" download="template.csv" Appearance="ButtonAppearance.Subtle" IconStart="@TemplateIcon">
+        Baixar modelo de importação (.csv)
+    </FluentAnchorButton>
+
+    <CustomerImportForm OnValidSubmit="SubmitAsync" OnCancel="CancelAsync" />
+</FluentStack>
+
+@code {
+    private static readonly Icon TemplateIcon = new Size20.DocumentTable();
+
+    [CascadingParameter]
+    public IDialogInstance Instance { get; set; } = default!;
+
+    private async Task SubmitAsync(CustomersImportScheme model) =>
+        await Instance.CloseAsync(DialogResult.Ok(model));
+
+    private async Task CancelAsync() =>
+        await Instance.CancelAsync();
+}
