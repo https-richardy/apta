@@ -8,6 +8,7 @@ global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.AspNetCore.OpenApi;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ApiExplorer;
+global using Microsoft.AspNetCore.Mvc.ModelBinding;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Authorization;
 
@@ -17,6 +18,7 @@ global using Apta.Application.Transport.Administrators;
 global using Apta.Application.Transport.Customers;
 
 global using Apta.WebApi.Authentication;
+global using Apta.WebApi.Binders;
 global using Apta.WebApi.Extensions;
 global using Apta.WebApi.Transformers;
 global using Apta.WebApi.Metadata;
