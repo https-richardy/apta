@@ -58,10 +58,6 @@
         }
 
         CustomersService.CreateMutation.Execute(model);
-        CustomersService.CreateMutation.Settled
-            .Take(1)
-            .Where(state => state.IsSuccess)
-            .Subscribe(_ => CustomersService.Query.Refetch());
     }
 
     private async Task OpenUpdateSheetAsync(CustomerScheme customer)
@@ -87,10 +83,6 @@
         }
 
         CustomersService.UpdateMutation.Execute(model);
-        CustomersService.UpdateMutation.Settled
-            .Take(1)
-            .Where(state => state.IsSuccess)
-            .Subscribe(_ => CustomersService.Query.Refetch());
     }
 
     private async Task OpenImportSheetAsync()
@@ -124,9 +116,5 @@
         }
 
         CustomersService.DeletionMutation.Execute(new CustomerDeletionScheme { Id = customer.Id });
-        CustomersService.DeletionMutation.Settled
-            .Take(1)
-            .Where(state => state.IsSuccess)
-            .Subscribe(_ => CustomersService.Query.Refetch());
     }
 }
