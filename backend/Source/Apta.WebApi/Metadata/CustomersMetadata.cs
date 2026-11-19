@@ -27,4 +27,10 @@ public static class CustomersMetadata
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(Error), StatusCodes.Status404NotFound)]
     public static void DeleteCustomerAsync(CustomerDeletionScheme request, CancellationToken cancellation) { }
+
+    [ApiConventionNameMatch(ApiConventionNameMatchBehavior.Prefix)]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(Error), StatusCodes.Status422UnprocessableEntity)]
+    public static void ImportCustomersAsync(CustomersImportScheme request, CancellationToken cancellation) { }
 }

@@ -178,4 +178,51 @@ public sealed class CustomersControllerTests
         Assert.Equal(StatusCodes.Status404NotFound, result.StatusCode);
         Assert.Equal(CustomerErrors.DoesNotExist, result.Value);
     }
+
+    [Fact(DisplayName = "when import customers is called and the import is accepted, 202 Accepted is returned")]
+    public async Task When_ImportCustomersAsync_IsCalled_WithAcceptedImport_Then_AcceptedIsReturned()
+    {
+        /* arrange: build the import request and the dispatched success result */
+        var request = new CustomersImportScheme
+        {
+            File = new Blob { FileName = _fixture.Create<string>(), Stream = Stream.Null }
+        };
+
+        _dispatcher.Setup(dispatcher => dispatcher.DispatchAsync(It.IsAny<IDispatchable<Result>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Success());
+
+        var controller = new CustomersController(_dispatcher.Object);
+
+        /* act: invoke the import endpoint */
+        var response = await controller.ImportCustomersAsync(request, TestContext.Current.CancellationToken);
+
+        /* assert: verify the response is 202 Accepted */
+        var result = Assert.IsType<StatusCodeResult>(response);
+
+        Assert.Equal(StatusCodes.Status202Accepted, result.StatusCode);
+    }
+
+    [Fact(DisplayName = "when import customers is called and the file is empty, 422 Unprocessable Entity is returned with the error")]
+    public async Task When_ImportCustomersAsync_IsCalled_WithEmptyFile_Then_UnprocessableEntityIsReturned()
+    {
+        /* arrange: build the import request and the dispatched failure result */
+        var request = new CustomersImportScheme
+        {
+            File = new Blob { FileName = _fixture.Create<string>(), Stream = Stream.Null }
+        };
+
+        _dispatcher.Setup(dispatcher => dispatcher.DispatchAsync(It.IsAny<IDispatchable<Result>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(Result.Failure(CustomerErrors.NoFileContent));
+
+        var controller = new CustomersController(_dispatcher.Object);
+
+        /* act: invoke the import endpoint */
+        var response = await controller.ImportCustomersAsync(request, TestContext.Current.CancellationToken);
+
+        /* assert: verify the response is 422 Unprocessable Entity carrying the error */
+        var result = Assert.IsType<ObjectResult>(response);
+
+        Assert.Equal(StatusCodes.Status422UnprocessableEntity, result.StatusCode);
+        Assert.Equal(CustomerErrors.NoFileContent, result.Value);
+    }
 }

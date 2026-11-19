@@ -11,4 +11,9 @@ public static class CustomerErrors
         Code: "#CUSTOMERS-ERROR-60D0A",
         Description: "The specified customer does not exist."
     );
+
+    public static readonly Error NoFileContent = new(
+        Code: "#CUSTOMERS-ERROR-A7241",
+        Description: "The customer import file is empty."
+    );
 }

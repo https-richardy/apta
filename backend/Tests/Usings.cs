@@ -1,5 +1,6 @@
 global using System.Net;
 global using System.Net.Http.Json;
+global using System.Text;
 global using System.Text.Json;
 global using System.Text.Encodings.Web;
 global using System.Security.Claims;
@@ -31,9 +32,12 @@ global using Apta.Domain.Aggregates;
 global using Apta.Domain.Errors;
 global using Apta.Domain.Filtering;
 global using Apta.Domain.Repositories;
+global using Apta.Domain.Services;
 
 global using Apta.Infrastructure.Persistence;
 global using Apta.Infrastructure.Persistence.Repositories;
+global using Apta.Infrastructure.Services;
+global using Apta.Infrastructure.Workers;
 
 global using Apta.WebApi;
 global using Apta.WebApi.Controllers;

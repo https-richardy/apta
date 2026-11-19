@@ -6,7 +6,10 @@ public static class WebInfrastructureExtension
     public static void AddWebInfrastructure(this IServiceCollection services)
     {
         services.AddOpenApi();
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            options.ModelBinderProviders.Insert(0, new BlobModelBinderProvider());
+        });
 
         services.AddCorsConfiguration();
         services.AddHttpContextAccessor();
