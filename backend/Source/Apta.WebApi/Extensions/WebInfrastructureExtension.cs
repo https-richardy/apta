@@ -5,6 +5,9 @@ public static class WebInfrastructureExtension
 {
     public static void AddWebInfrastructure(this IServiceCollection services)
     {
+        services.Configure<KestrelServerOptions>(options => options.Limits.MaxRequestBodySize = 32 * 1024 * 1024);
+        services.Configure<FormOptions>(options => options.MultipartBodyLengthLimit = 32 * 1024 * 1024);
+
         services.AddOpenApi();
         services.AddControllers(options =>
         {

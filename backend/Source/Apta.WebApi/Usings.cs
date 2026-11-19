@@ -7,6 +7,8 @@ global using Microsoft.OpenApi;
 global using Microsoft.IdentityModel.Tokens;
 
 global using Microsoft.AspNetCore.OpenApi;
+global using Microsoft.AspNetCore.Http.Features;
+global using Microsoft.AspNetCore.Server.Kestrel.Core;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.AspNetCore.Mvc.ApiExplorer;
 global using Microsoft.AspNetCore.Mvc.ModelBinding;
