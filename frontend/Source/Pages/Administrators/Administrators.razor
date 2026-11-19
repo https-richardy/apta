@@ -52,6 +52,10 @@
         }
 
         AdministratorsService.CreateMutation.Execute(model);
+        AdministratorsService.CreateMutation.Settled
+            .Take(1)
+            .Where(state => state.IsSuccess)
+            .Subscribe(_ => AdministratorsService.Query.Refetch());
     }
 
     private async Task OpenUpdateSheetAsync(AdministratorScheme administrator)
@@ -76,6 +80,10 @@
         }
 
         AdministratorsService.UpdateMutation.Execute(model);
+        AdministratorsService.UpdateMutation.Settled
+            .Take(1)
+            .Where(state => state.IsSuccess)
+            .Subscribe(_ => AdministratorsService.Query.Refetch());
     }
 
     private async Task DeleteAsync(AdministratorScheme administrator)
@@ -93,5 +101,9 @@
         }
 
         AdministratorsService.DeletionMutation.Execute(new AdministratorDeletionScheme { Id = administrator.Id });
+        AdministratorsService.DeletionMutation.Settled
+            .Take(1)
+            .Where(state => state.IsSuccess)
+            .Subscribe(_ => AdministratorsService.Query.Refetch());
     }
 }

@@ -1,15 +1,9 @@
 namespace Apta.WebUI.Services;
 
-public sealed class AdministratorsService
+public sealed class AdministratorsService(IQueryClient queryClient, IAdministratorsClient administratorsClient)
 {
-    public IQuery<AdministratorFiltersParameters, Pagination<AdministratorScheme>> Query { get; private set; }
-    public IMutation<AdministratorCreationScheme, AdministratorScheme> CreateMutation { get; private set; }
-    public IMutation<UpdateAdministratorScheme, AdministratorScheme> UpdateMutation { get; private set; }
-    public IMutation<AdministratorDeletionScheme, Result> DeletionMutation { get; private set; }
-
-    public AdministratorsService(IQueryClient queryClient, IAdministratorsClient administratorsClient)
-    {
-        Query = queryClient.CreateQuery(new QueryOptions<AdministratorFiltersParameters, Pagination<AdministratorScheme>>
+    public IQuery<AdministratorFiltersParameters, Pagination<AdministratorScheme>> Query { get; private set; } =
+        queryClient.CreateQuery(new QueryOptions<AdministratorFiltersParameters, Pagination<AdministratorScheme>>
         {
             KeyFactory = filters => QueryKey.From("administrators", filters),
             Fetcher = async (filters, cancellation) =>
@@ -24,9 +18,9 @@ public sealed class AdministratorsService
             }
         });
 
-        CreateMutation = queryClient.CreateMutation(new MutationOptions<AdministratorCreationScheme, AdministratorScheme>
+    public IMutation<AdministratorCreationScheme, AdministratorScheme> CreateMutation { get; private set; } =
+        queryClient.CreateMutation(new MutationOptions<AdministratorCreationScheme, AdministratorScheme>
         {
-            OnSuccess = (_, _) => Query.Refetch(),
             Mutator = async (scheme, cancellation) =>
             {
                 var result = await administratorsClient.CreateAdministratorAsync(scheme, cancellation);
@@ -39,9 +33,9 @@ public sealed class AdministratorsService
             }
         });
 
-        UpdateMutation = queryClient.CreateMutation(new MutationOptions<UpdateAdministratorScheme, AdministratorScheme>
+    public IMutation<UpdateAdministratorScheme, AdministratorScheme> UpdateMutation { get; private set; } =
+        queryClient.CreateMutation(new MutationOptions<UpdateAdministratorScheme, AdministratorScheme>
         {
-            OnSuccess = (_, _) => Query.Refetch(),
             Mutator = async (scheme, cancellation) =>
             {
                 var result = await administratorsClient.UpdateAdministratorAsync(scheme, cancellation);
@@ -54,9 +48,9 @@ public sealed class AdministratorsService
             }
         });
 
-        DeletionMutation = queryClient.CreateMutation(new MutationOptions<AdministratorDeletionScheme, Result>
+    public IMutation<AdministratorDeletionScheme, Result> DeletionMutation { get; private set; } =
+        queryClient.CreateMutation(new MutationOptions<AdministratorDeletionScheme, Result>
         {
-            OnSuccess = (_, _) => Query.Refetch(),
             Mutator = async (scheme, cancellation) =>
             {
                 var result = await administratorsClient.DeleteAdministratorAsync(scheme, cancellation);
@@ -68,5 +62,4 @@ public sealed class AdministratorsService
                 return result;
             }
         });
-    }
 }
